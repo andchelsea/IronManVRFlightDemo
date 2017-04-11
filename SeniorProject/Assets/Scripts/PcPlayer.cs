@@ -3,24 +3,26 @@ using System.Collections;
 
 public class PcPlayer : MonoBehaviour
 {
-    [SerializeField]
-    private float speed = 10.0f;
-
     private Rigidbody rb;
 
     private float pitch = 0.0f;
     private float yaw = 0.0f;
-    [SerializeField]
-    private float pitchSpeed = 2.0f;
-    [SerializeField]
-    private float yawSpeed = 2.0f;
+    [SerializeField] private float pitchSpeed = 2.0f;
+    [SerializeField] private float yawSpeed = 2.0f;
+    [SerializeField] private float speed = 10.0f;
 
 
     // Use this for initialization
     void Start ()
     {
-        rb = GetComponent<Rigidbody>();
 	}
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 	
 	// Update is called once per frame
 	void Update ()
