@@ -3,13 +3,15 @@ using System.Collections;
 
 public class PcPlayer : MonoBehaviour
 {
-    private Rigidbody rb;
+    private Rigidbody Rb;
 
-    private float pitch = 0.0f;
-    private float yaw = 0.0f;
-    [SerializeField] private float pitchSpeed = 2.0f;
-    [SerializeField] private float yawSpeed = 2.0f;
-    [SerializeField] private float speed = 10.0f;
+    private float Pitch = 0.0f;
+    private float Yaw = 0.0f;
+    [SerializeField] private float PitchSpeed = -2.0f;
+    [SerializeField] private float YawSpeed = 2.0f;
+    [SerializeField] private float Speed = 10.0f;
+    [SerializeField] private float MaxPitchAngle = 120.0f;
+    [SerializeField] private float MinPitchAngle = -120.0f;
 
 
     // Use this for initialization
@@ -19,8 +21,8 @@ public class PcPlayer : MonoBehaviour
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        Cursor.lockState = CursorLockMode.Locked;
+        Rb = GetComponent<Rigidbody>();
+        Cursor.lockState = CursorLockMode.Locked; //add crosshair
         Cursor.visible = false;
     }
 	
@@ -30,20 +32,24 @@ public class PcPlayer : MonoBehaviour
         Vector3 newVel = new Vector3(0,0,0);
 
         //Movement Inputs
-        rb.velocity = new Vector3(0.0f,0.0f,0.0f);
+        Rb.velocity = new Vector3(0.0f,0.0f,0.0f);
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
         // rb.AddForce(transform.forward * speed* Vertical);
         // rb.AddForce(transform.right * speed * 0.75f * Horizontal);
         //testing purposes
-        newVel += transform.forward * speed * vertical;
-        newVel += transform.right * speed * 0.75f * horizontal;
-        rb.AddForce(newVel);
+        newVel += transform.forward * Speed * vertical;
+        newVel += transform.right * Speed * 0.75f * horizontal;
+        Rb.AddForce(newVel);
 
-        yaw += yawSpeed * Input.GetAxis("Mouse X");
-        pitch += pitchSpeed * Input.GetAxis("Mouse Y");
-        transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
-        //need to lock mouse to center of the screen (add some kind of targeting UI)
+        Yaw += YawSpeed * Input.GetAxis("Mouse X");
+
+        float pitch = Pitch + (PitchSpeed * Input.GetAxis("Mouse Y"));
+
+        Pitch = pitch > MaxPitchAngle ? MaxPitchAngle : pitch;
+        Pitch = pitch < MinPitchAngle ? MinPitchAngle : pitch;
+
+        transform.eulerAngles = new Vector3(Pitch, Yaw, 0.0f);
     }
 }
