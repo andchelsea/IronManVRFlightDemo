@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class PcPlayer : MonoBehaviour
@@ -7,7 +8,7 @@ public class PcPlayer : MonoBehaviour
 
     private float Pitch = 0.0f;
     private float Yaw = 0.0f;
-    [SerializeField] private float PitchSpeed = -2.0f;
+    [SerializeField] private float PitchSpeed = 2.0f;
     [SerializeField] private float YawSpeed = 2.0f;
     [SerializeField] private float Speed = 10.0f;
     [SerializeField] private float MaxPitchAngle = 120.0f;
@@ -45,11 +46,18 @@ public class PcPlayer : MonoBehaviour
 
         Yaw += YawSpeed * Input.GetAxis("Mouse X");
 
-        float pitch = Pitch + (PitchSpeed * Input.GetAxis("Mouse Y"));
+        Pitch += (PitchSpeed * Input.GetAxis("Mouse Y"));
 
-        Pitch = pitch > MaxPitchAngle ? MaxPitchAngle : pitch;
-        Pitch = pitch < MinPitchAngle ? MinPitchAngle : pitch;
+        Pitch = Pitch <= MinPitchAngle ? MinPitchAngle : Pitch;
 
-        transform.eulerAngles = new Vector3(Pitch, Yaw, 0.0f);
+        Pitch = Pitch >= MaxPitchAngle ? MaxPitchAngle : Pitch;
+
+        transform.localEulerAngles = new Vector3(Pitch, Yaw, 0.0f);
+
+      if( Input.GetButton("Submit"))//either make into axis or getbutton down?
+        {
+            Debug.Log("FOUND");
+            //SceneManager.LoadScene("PauseMenu",LoadSceneMode.Additive);
+        }
     }
 }
