@@ -14,7 +14,6 @@ public class PcPlayer : MonoBehaviour
     [SerializeField] private float MaxPitchAngle = 120.0f;
     [SerializeField] private float MinPitchAngle = -120.0f;
 
-
     // Use this for initialization
     void Start ()
     {
@@ -54,10 +53,12 @@ public class PcPlayer : MonoBehaviour
 
         transform.localEulerAngles = new Vector3(Pitch, Yaw, 0.0f);
 
-      if( Input.GetButton("Submit"))//either make into axis or getbutton down?
+      if( Input.GetButtonDown("Submit"))//either make into axis or getbutton down?
         {
             Debug.Log("FOUND");
-            //SceneManager.LoadScene("PauseMenu",LoadSceneMode.Additive);
+            UiManager.Instance.PCTogglePause();
+            //SceneManager.LoadScene("MainMenu",LoadSceneMode.Single);
+            //Time.timeScale = 0; //<-- stops time. Time.timeScale =1 makes it back to normal.
         }
     }
 }
