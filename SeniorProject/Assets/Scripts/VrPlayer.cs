@@ -64,5 +64,10 @@ public class VrPlayer : MonoBehaviour
         {
             Fly();
         }
+        else if(Controller.menuPressed)
+        {
+            Debug.Log("FOUND");
+            //UiManager.Instance.TogglePause();<--VR player pause seperate??
+        }
     }
 }
