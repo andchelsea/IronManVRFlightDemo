@@ -5,7 +5,7 @@ public class UiManager : MonoBehaviour {
 
     public static UiManager Instance;
     private bool paused = false;
-
+    [SerializeField]   Canvas VRPause;
 	// Use this for initialization
 	void Awake () {
         Instance = this;
@@ -17,13 +17,17 @@ public class UiManager : MonoBehaviour {
         paused = !paused;
         if (paused)
         {
-            Time.timeScale = 1;
+            GetComponentInChildren<Canvas>().enabled = true;
+            VRPause.enabled = true;
+            Time.timeScale = 0;
             Cursor.lockState = CursorLockMode.None; //hide crosshair
             Cursor.visible = true;
         }
         else
         {
-            Time.timeScale = 0;
+            GetComponentInChildren<Canvas>().enabled = false;
+            VRPause.enabled = false;
+            Time.timeScale = 1;
             Cursor.lockState = CursorLockMode.Locked; //unhide crosshair
             Cursor.visible = false;
         }
