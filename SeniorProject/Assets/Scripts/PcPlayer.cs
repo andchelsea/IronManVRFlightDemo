@@ -14,6 +14,13 @@ public class PcPlayer : MonoBehaviour
     [SerializeField] private float MaxPitchAngle = 120.0f;
     [SerializeField] private float MinPitchAngle = -120.0f;
 
+    [SerializeField] private float MaxRayDist = 120.0f;
+
+    [SerializeField] private GameObject pFlare1;//make a prefab
+    [SerializeField] private GameObject pFlare2;//make a prefab
+    [SerializeField] private float FlareCoolDown = 1.0f;
+    private float Flare1Delay = 0.0f;
+    private float Flare2Delay = 0.0f;
     // Use this for initialization
     void Start ()
     {
@@ -31,6 +38,8 @@ public class PcPlayer : MonoBehaviour
     {
         if(UiManager.Instance.IsUpdatable())
         {
+            Flare1Delay += Time.deltaTime;
+            Flare2Delay += Time.deltaTime;
             Vector3 newVel = new Vector3(0,0,0);
 
             //Movement Inputs
@@ -38,8 +47,6 @@ public class PcPlayer : MonoBehaviour
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
-            // rb.AddForce(transform.forward * speed* Vertical);
-            // rb.AddForce(transform.right * speed * 0.75f * Horizontal);
             //testing purposes
             newVel += transform.forward * Speed * vertical;
             newVel += transform.right * Speed * 0.75f * horizontal;
@@ -54,6 +61,38 @@ public class PcPlayer : MonoBehaviour
             Pitch = Pitch >= MaxPitchAngle ? MaxPitchAngle : Pitch;
 
             transform.localEulerAngles = new Vector3(Pitch, Yaw, 0.0f);
+
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit info = new RaycastHit();
+            Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out info, MaxRayDist);
+
+            if(info.collider.tag == "Enemy")
+            {
+               // info.collider.gameObject.GetComponent<Material>().shader = lit;
+               if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
+                {
+                    Instantiate(pFlare1, info.transform.position, transform.rotation);
+                    Flare1Delay = 0.0f;
+                }
+               else if(Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
+                {
+                    Instantiate(pFlare2, info.transform.position, this.transform.rotation);
+                    Flare2Delay = 0.0f;
+                }
+            }
+            else if(info.collider.tag == "Ammo")
+            {
+                if (Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
+                {
+                    Instantiate(pFlare1, info.transform.position, this.transform.rotation);
+                    Flare1Delay = 0.0f;
+                }
+                else if (Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
+                {
+                    Instantiate(pFlare2, info.transform.position, this.transform.rotation);
+                    Flare2Delay = 0.0f;
+                }
+            }
         }
 
       if( Input.GetButtonDown("Submit"))//either make into axis or getbutton down?
@@ -61,7 +100,6 @@ public class PcPlayer : MonoBehaviour
             Debug.Log("FOUND");
             UiManager.Instance.TogglePause();
             //SceneManager.LoadScene("MainMenu",LoadSceneMode.Single);
-            //Time.timeScale = 0; //<-- stops time. Time.timeScale =1 makes it back to normal.
         }
     }
 }
