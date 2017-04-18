@@ -6,11 +6,11 @@ public class Spawner : MonoBehaviour {
 
     [SerializeField] private GameObject pAmmo;//make a prefab
     [SerializeField] private float AmmoSpawnCoolDown = 0.5f;
-    [SerializeField] private float AmmoDelay = 0;
+    private float AmmoDelay = 0;
 
     [SerializeField] private GameObject pEnemy;//make a prefab
     [SerializeField] private float EnemySpawnCoolDown = 0.5f;
-    [SerializeField] private float EnemyDelay = 0.0f;
+    private float EnemyDelay = 0.0f;
     [SerializeField] private float EnemyFlySpeed = 5.0f; //arbitrary starting numbers, playtest
 
     [SerializeField] private VrPlayer mPlayer;
@@ -33,7 +33,7 @@ public class Spawner : MonoBehaviour {
         while (!spawnable)
         {
             pos = mPlayer.transform.position;
-            pos += Random.insideUnitSphere*Random.Range(minPos,maxPos);
+            pos += (Random.insideUnitSphere*Random.Range(minPos,maxPos));
             if(PlayArea.bounds.Contains(pos))
             {
                 spawnable = true;
