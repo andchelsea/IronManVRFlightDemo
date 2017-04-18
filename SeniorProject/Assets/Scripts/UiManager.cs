@@ -5,6 +5,8 @@ public class UiManager : MonoBehaviour {
 
     public static UiManager Instance;
     private bool paused = false;
+    [SerializeField]   Canvas VRPause;
+
     private bool updatable = true;
 
 	// Use this for initialization
@@ -24,19 +26,22 @@ public class UiManager : MonoBehaviour {
         paused = !paused;
         if (paused)
         {
-            Time.timeScale = 0.0f;
-            Cursor.lockState = CursorLockMode.None; 
-            //hide PC crosshair
+
+            GetComponentInChildren<Canvas>().enabled = true;
+            VRPause.enabled = true;
+            Time.timeScale = 0;
+            Cursor.lockState = CursorLockMode.None; //hide crosshair
             Cursor.visible = true;
 
             updatable = false;
         }
         else
         {
-            Time.timeScale = 1.0f;
-            Cursor.lockState = CursorLockMode.Locked; 
-            //unhide PC crosshair
-            Cursor.visible = false;
+            GetComponentInChildren<Canvas>().enabled = false;
+            VRPause.enabled = false;
+            Time.timeScale = 1;
+            Cursor.lockState = CursorLockMode.Locked; //unhide crosshair
+             Cursor.visible = false;
 
             updatable = true;
         }
