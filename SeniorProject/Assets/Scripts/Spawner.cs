@@ -70,7 +70,7 @@ public class Spawner : MonoBehaviour {
                 AmmoDelay = 0;
 
                 Vector3 ammoPos = SpawnablePos();
-                GameObject p = Instantiate(pAmmo, ammoPos, transform.rotation) as GameObject; //this might wanna make an empty object infront of controller or with an offset
+                Instantiate(pAmmo, ammoPos, transform.rotation);//this might wanna make an empty object infront of controller or with an offset
             }
         }
     }

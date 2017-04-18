@@ -8,7 +8,7 @@ public class VrPlayer : MonoBehaviour
     [SerializeField] private float MaxSpeed = 150; //arbitrary starting numbers, playtest
     [SerializeField] private float ProjectileSpeed = 15; //arbitrary starting numbers, playtest
     [SerializeField] private float AttackCoolDown = 0.5f; 
-    [SerializeField] private float AttackDelay = 0;
+    private float AttackDelay = 0;
 
     private SteamVR_TrackedController Controller;//used for controller update
     //private SteamVR_Controller.Device Device;//used for touchpad update. Needed?

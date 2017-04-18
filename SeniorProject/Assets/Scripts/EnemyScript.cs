@@ -4,11 +4,17 @@ using System.Collections;
 public class EnemyScript : MonoBehaviour
 {
     [SerializeField] private float Lifetime = 3;//needed?
+
     public Vector3 playerPosition;
+
+    [SerializeField] private Shader unlit;//make a shader
+    [SerializeField] private Shader lit;//make a shader
+
     // Use this for initialization
-    void Start ()
+    void Awake ()
     {
-	}
+        GetComponent<Material>().shader = unlit;
+    }
 	
 	// Update is called once per frame
 	void Update()
@@ -17,8 +23,19 @@ public class EnemyScript : MonoBehaviour
         if (Lifetime < 0.0f)
             Destroy(this.gameObject);
 
-        transform.LookAt(playerPosition);
-	}
+        transform.LookAt(playerPosition);            
+
+    }
+
+    void OnMouseEnter()
+    {
+        GetComponent<Material>().shader = lit;
+    }
+
+    void OnMouseExit()
+    {
+        GetComponent<Material>().shader = unlit;
+    }
 
     void OnCollisionEnter(Collision other)
     {
