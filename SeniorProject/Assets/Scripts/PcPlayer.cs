@@ -29,34 +29,37 @@ public class PcPlayer : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        Vector3 newVel = new Vector3(0,0,0);
+        if(UiManager.Instance.IsUpdatable())
+        {
+            Vector3 newVel = new Vector3(0,0,0);
 
-        //Movement Inputs
-        Rb.velocity = new Vector3(0.0f,0.0f,0.0f);
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+            //Movement Inputs
+            Rb.velocity = new Vector3(0.0f,0.0f,0.0f);
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
 
-        // rb.AddForce(transform.forward * speed* Vertical);
-        // rb.AddForce(transform.right * speed * 0.75f * Horizontal);
-        //testing purposes
-        newVel += transform.forward * Speed * vertical;
-        newVel += transform.right * Speed * 0.75f * horizontal;
-        Rb.AddForce(newVel);
+            // rb.AddForce(transform.forward * speed* Vertical);
+            // rb.AddForce(transform.right * speed * 0.75f * Horizontal);
+            //testing purposes
+            newVel += transform.forward * Speed * vertical;
+            newVel += transform.right * Speed * 0.75f * horizontal;
+            Rb.AddForce(newVel);
 
-        Yaw += YawSpeed * Input.GetAxis("Mouse X");
+            Yaw += YawSpeed * Input.GetAxis("Mouse X");
 
-        Pitch += (PitchSpeed * Input.GetAxis("Mouse Y"));
+            Pitch += (PitchSpeed * Input.GetAxis("Mouse Y"));
 
-        Pitch = Pitch <= MinPitchAngle ? MinPitchAngle : Pitch;
+            Pitch = Pitch <= MinPitchAngle ? MinPitchAngle : Pitch;
 
-        Pitch = Pitch >= MaxPitchAngle ? MaxPitchAngle : Pitch;
+            Pitch = Pitch >= MaxPitchAngle ? MaxPitchAngle : Pitch;
 
-        transform.localEulerAngles = new Vector3(Pitch, Yaw, 0.0f);
+            transform.localEulerAngles = new Vector3(Pitch, Yaw, 0.0f);
+        }
 
       if( Input.GetButtonDown("Submit"))//either make into axis or getbutton down?
         {
             Debug.Log("FOUND");
-            UiManager.Instance.PCTogglePause();
+            UiManager.Instance.TogglePause();
             //SceneManager.LoadScene("MainMenu",LoadSceneMode.Single);
             //Time.timeScale = 0; //<-- stops time. Time.timeScale =1 makes it back to normal.
         }

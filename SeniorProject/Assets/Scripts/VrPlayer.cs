@@ -17,6 +17,9 @@ public class VrPlayer : MonoBehaviour
 
     private int mHealth = 10, mAmmo = 10; //arbitrary starting numbers, playtest
 
+
+    public int GetHealth() { return mHealth; }
+
     // Use this for initialization
     void Start ()
     {
@@ -26,19 +29,26 @@ public class VrPlayer : MonoBehaviour
     {
         Controller = GetComponent<SteamVR_TrackedController>();
         Controller.PadClicked += Attack;
-        //mController.MenuButtonClicked //add Pause menu here
+        Controller.MenuButtonClicked += Pause; //add Pause menu here
     }
 
     void Attack(object sender, ClickedEventArgs e)
     {
         if (mAmmo > 0 && AttackDelay > AttackCoolDown)
         {
+            AttackDelay = 0;
+            --mAmmo;
+
             GameObject p = Instantiate(pProjectile, this.transform.position, this.transform.rotation) as GameObject; //this might wanna make an empty object infront of controller or with an offset
             Rigidbody PRB = p.GetComponent<Rigidbody>();
             PRB.AddForce(PRB.transform.forward * ProjectileSpeed, ForceMode.Impulse); //needs to be tested!!!
-            AttackDelay = 0;
-            --mAmmo;
         }
+    }
+
+    void Pause(object sender, ClickedEventArgs e)
+    {
+        Debug.Log("FOUND");
+        UiManager.Instance.TogglePause();//<--VR player pause seperate??
     }
 
     void Fly()
@@ -53,21 +63,25 @@ public class VrPlayer : MonoBehaviour
         {
             Debug.Log("Enemy hit you!");
             --mHealth;
+
+            if (mHealth <= 0)
+            {
+                UiManager.Instance.SetUpdatable(false);
+            }
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        AttackDelay += Time.deltaTime;
-        if(Controller.triggerPressed)
+        if(UiManager.Instance.IsUpdatable())
         {
-            Fly();
-        }
-        else if(Controller.menuPressed)
-        {
-            Debug.Log("FOUND");
-            //UiManager.Instance.TogglePause();<--VR player pause seperate??
+            AttackDelay += Time.deltaTime;
+
+            if(Controller.triggerPressed)
+            {
+                Fly();
+            }
         }
     }
 }

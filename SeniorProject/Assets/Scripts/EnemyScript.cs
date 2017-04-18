@@ -3,19 +3,21 @@ using System.Collections;
 
 public class EnemyScript : MonoBehaviour
 {
-    [SerializeField] private float Lifetime = 3;
-
+    [SerializeField] private float Lifetime = 3;//needed?
+    public Vector3 playerPosition;
     // Use this for initialization
     void Start ()
     {
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void Update()
     {
         Lifetime -= Time.deltaTime;
         if (Lifetime < 0.0f)
             Destroy(this.gameObject);
+
+        transform.LookAt(playerPosition);
 	}
 
     void OnCollisionEnter(Collision other)
