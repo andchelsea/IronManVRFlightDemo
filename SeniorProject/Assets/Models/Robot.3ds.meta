@@ -1,0 +1,218 @@
+fileFormatVersion: 2
+guid: a9fdba60ac4958b4f859519e06a110b8
+timeCreated: 1492914877
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Chest_Plates
+    100002: Chest_Plates.000
+    100004: Chesty_Inter
+    100006: Circle
+    100008: 'Eye '
+    100010: 'Eye_Ball '
+    100012: Eye_Iris_Lef
+    100014: Eye_Iris_Rig
+    100016: 'Eye_Lens '
+    100018: 'Face_Cheeks '
+    100020: Face_Retopol
+    100022: Head
+    100024: 'Head_Skull '
+    100026: Hydraulics
+    100028: 'Latch '
+    100030: 'Mouth '
+    100032: Muscle_Attac
+    100034: Muscles_Neck
+    100036: Muscles_Shou
+    100038: 'Pipes '
+    100040: Plane
+    100042: //RootNode
+    100044: SHoulder_Joi
+    100046: 'Spine '
+    100048: Spine_Atlas
+    100050: Throat
+    100052: Track_Eye_Ri
+    100054: Track_Left_E
+    100056: Track_Right_
+    100058: Wires
+    400000: Chest_Plates
+    400002: Chest_Plates.000
+    400004: Chesty_Inter
+    400006: Circle
+    400008: 'Eye '
+    400010: 'Eye_Ball '
+    400012: Eye_Iris_Lef
+    400014: Eye_Iris_Rig
+    400016: 'Eye_Lens '
+    400018: 'Face_Cheeks '
+    400020: Face_Retopol
+    400022: Head
+    400024: 'Head_Skull '
+    400026: Hydraulics
+    400028: 'Latch '
+    400030: 'Mouth '
+    400032: Muscle_Attac
+    400034: Muscles_Neck
+    400036: Muscles_Shou
+    400038: 'Pipes '
+    400040: Plane
+    400042: //RootNode
+    400044: SHoulder_Joi
+    400046: 'Spine '
+    400048: Spine_Atlas
+    400050: Throat
+    400052: Track_Eye_Ri
+    400054: Track_Left_E
+    400056: Track_Right_
+    400058: Wires
+    2300000: Chest_Plates
+    2300002: Chest_Plates.000
+    2300004: Chesty_Inter
+    2300006: Circle
+    2300008: 'Eye '
+    2300010: 'Eye_Ball '
+    2300012: Eye_Iris_Lef
+    2300014: Eye_Iris_Rig
+    2300016: 'Eye_Lens '
+    2300018: 'Face_Cheeks '
+    2300020: Face_Retopol
+    2300022: Head
+    2300024: 'Head_Skull '
+    2300026: Hydraulics
+    2300028: 'Latch '
+    2300030: 'Mouth '
+    2300032: Muscle_Attac
+    2300034: Muscles_Neck
+    2300036: Muscles_Shou
+    2300038: 'Pipes '
+    2300040: Plane
+    2300042: SHoulder_Joi
+    2300044: 'Spine '
+    2300046: Spine_Atlas
+    2300048: Throat
+    2300050: Track_Eye_Ri
+    2300052: Track_Left_E
+    2300054: Track_Right_
+    2300056: Wires
+    3300000: Chest_Plates
+    3300002: Chest_Plates.000
+    3300004: Chesty_Inter
+    3300006: Circle
+    3300008: 'Eye '
+    3300010: 'Eye_Ball '
+    3300012: Eye_Iris_Lef
+    3300014: Eye_Iris_Rig
+    3300016: 'Eye_Lens '
+    3300018: 'Face_Cheeks '
+    3300020: Face_Retopol
+    3300022: Head
+    3300024: 'Head_Skull '
+    3300026: Hydraulics
+    3300028: 'Latch '
+    3300030: 'Mouth '
+    3300032: Muscle_Attac
+    3300034: Muscles_Neck
+    3300036: Muscles_Shou
+    3300038: 'Pipes '
+    3300040: Plane
+    3300042: SHoulder_Joi
+    3300044: 'Spine '
+    3300046: Spine_Atlas
+    3300048: Throat
+    3300050: Track_Eye_Ri
+    3300052: Track_Left_E
+    3300054: Track_Right_
+    3300056: Wires
+    4300000: Circle
+    4300002: Muscle_Attac
+    4300004: Hydraulics
+    4300006: Plane
+    4300008: Chest_Plates
+    4300010: 'Eye_Lens '
+    4300012: Throat
+    4300014: 'Pipes '
+    4300016: Muscles_Shou
+    4300018: Track_Eye_Ri
+    4300020: Track_Left_E
+    4300022: Eye_Iris_Lef
+    4300024: Track_Right_
+    4300026: Eye_Iris_Rig
+    4300028: 'Eye_Ball '
+    4300030: Spine_Atlas
+    4300032: Chesty_Inter
+    4300034: Muscles_Neck
+    4300036: 'Spine '
+    4300038: Head
+    4300040: 'Face_Cheeks '
+    4300042: 'Eye '
+    4300044: Face_Retopol
+    4300046: Chest_Plates.000
+    4300048: Wires
+    4300050: 'Mouth '
+    4300052: 'Latch '
+    4300054: SHoulder_Joi
+    4300056: 'Head_Skull '
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
