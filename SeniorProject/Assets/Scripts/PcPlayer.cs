@@ -4,6 +4,7 @@ using System.Collections;
 
 public class PcPlayer : MonoBehaviour
 {
+    public static PcPlayer Instance;
     private Rigidbody Rb;
 
     private float Pitch = 0.0f;
@@ -16,27 +17,30 @@ public class PcPlayer : MonoBehaviour
 
     [SerializeField] private float MaxRayDist = 120.0f;
 
-    [SerializeField] private GameObject pFlare1;//make a prefab
-    [SerializeField] private GameObject pFlare2;//make a prefab
+    private GameObject pFlare1;//make a prefab
+    private GameObject pFlare2;//make a prefab
     [SerializeField] private float FlareCoolDown = 1.0f;
     private float Flare1Delay = 0.0f;
     private float Flare2Delay = 0.0f;
-    // Use this for initialization
-    void Start ()
-    {
-	}
 
-    void Awake()
+    // Use this for initialization
+    private void Start ()
     {
+        if (Instance != null && Instance != this)
+            Destroy(this.gameObject);
+        Instance = this;
+
         Rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked; //add crosshair
         Cursor.visible = false;
+        pFlare1 = Manager.Instance.FlarePool[0];
+        pFlare2 = Manager.Instance.FlarePool[1];
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if(UiManager.Instance.IsUpdatable())
+        if(Manager.Instance.IsUpdatable())
         {
             Flare1Delay += Time.deltaTime;
             Flare2Delay += Time.deltaTime;
@@ -66,30 +70,19 @@ public class PcPlayer : MonoBehaviour
             RaycastHit info = new RaycastHit();
             Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out info, MaxRayDist);
 
-            if(info.collider.tag == "Enemy")
+            if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")
             {
                // info.collider.gameObject.GetComponent<Material>().shader = lit;
                if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
                 {
-                    Instantiate(pFlare1, info.transform.position, transform.rotation);
+                    pFlare1.SetActive(true);//either make a flare script to auto deactivate over time or remove
+                    pFlare1.transform.position = info.transform.position;
                     Flare1Delay = 0.0f;
                 }
                else if(Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
                 {
-                    Instantiate(pFlare2, info.transform.position, this.transform.rotation);
-                    Flare2Delay = 0.0f;
-                }
-            }
-            else if(info.collider.tag == "Ammo")
-            {
-                if (Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
-                {
-                    Instantiate(pFlare1, info.transform.position, this.transform.rotation);
-                    Flare1Delay = 0.0f;
-                }
-                else if (Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
-                {
-                    Instantiate(pFlare2, info.transform.position, this.transform.rotation);
+                    pFlare2.SetActive(true);
+                    pFlare2.transform.position = info.transform.position;
                     Flare2Delay = 0.0f;
                 }
             }
@@ -98,7 +91,7 @@ public class PcPlayer : MonoBehaviour
       if( Input.GetButtonDown("Submit"))//either make into axis or getbutton down?
         {
             Debug.Log("FOUND");
-            UiManager.Instance.TogglePause();
+            Manager.Instance.TogglePause();
             //SceneManager.LoadScene("MainMenu",LoadSceneMode.Single);
         }
     }

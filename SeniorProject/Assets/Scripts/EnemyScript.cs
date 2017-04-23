@@ -5,13 +5,11 @@ public class EnemyScript : MonoBehaviour
 {
     [SerializeField] private float Lifetime = 3;//needed?
 
-    public Vector3 playerPosition;
-
     [SerializeField] private Shader unlit;//make a shader
     [SerializeField] private Shader lit;//make a shader
 
     // Use this for initialization
-    void Awake ()
+    void Start ()
     {
         GetComponent<Material>().shader = unlit;
     }
@@ -19,17 +17,19 @@ public class EnemyScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        Lifetime -= Time.deltaTime;
-        if (Lifetime < 0.0f)
-            Destroy(this.gameObject);
+        if (Manager.Instance.IsUpdatable())
+        { 
+            Lifetime -= Time.deltaTime;
+            if (Lifetime < 0.0f)
+                this.gameObject.SetActive(false);//will this work??
 
-        transform.LookAt(playerPosition);            
-
+            transform.LookAt(VrPlayer.Instance.transform.position);
+        }
     }
 
     void OnMouseEnter()
     {
-        GetComponent<Material>().shader = lit;
+        GetComponent<Material>().shader = lit;//testing required
     }
 
     void OnMouseExit()
@@ -42,12 +42,13 @@ public class EnemyScript : MonoBehaviour
         if (other.gameObject.tag == "MainCamera")
         {
             Debug.Log("Enemy hit VR Player!");
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
+            this.gameObject.SetActive(false);//will this work??
         }
         else if(other.gameObject.tag == "Bullet")
         {
             Debug.Log("Enemy hit a Bullet!");
-            Destroy(this.gameObject);
+            this.gameObject.SetActive(false);//will this work??
         }
     }
 
