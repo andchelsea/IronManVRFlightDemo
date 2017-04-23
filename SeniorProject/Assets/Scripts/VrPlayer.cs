@@ -3,6 +3,8 @@ using System.Collections;
 
 public class VrPlayer : MonoBehaviour
 {
+    public static VrPlayer Instance;
+
     [SerializeField] private Rigidbody Rb;//probably head/torso, needed to apply velocity
     [SerializeField] private float FlySpeed = 15; //arbitrary starting numbers, playtest
     [SerializeField] private float MaxSpeed = 150; //arbitrary starting numbers, playtest
@@ -13,20 +15,22 @@ public class VrPlayer : MonoBehaviour
     private SteamVR_TrackedController Controller;//used for controller update
     //private SteamVR_Controller.Device Device;//used for touchpad update. Needed?
 
-    [SerializeField] private GameObject pProjectile;//make a prefab
+    //private GameObject pProjectile;//make a prefab
 
-    private int mHealth = 10, mAmmo = 10; //arbitrary starting numbers, playtest
+    [SerializeField] private int mHealth = 10;
+    [SerializeField] private int mAmmo = 10; //arbitrary starting numbers, playtest
+    [SerializeField] private int NumAmmo = 10; //arbitrary starting numbers, playtest
 
 
     public int GetHealth() { return mHealth; }
 
     // Use this for initialization
-    void Start ()
+    private void Awake()
     {
-	}
-	
-    void Awake()
-    {
+        if (Instance != null && Instance != this)
+            Destroy(this.gameObject);
+        Instance = this;
+
         Controller = GetComponent<SteamVR_TrackedController>();
         Controller.PadClicked += Attack;
         Controller.MenuButtonClicked += Pause; //add Pause menu here
@@ -36,19 +40,26 @@ public class VrPlayer : MonoBehaviour
     {
         if (mAmmo > 0 && AttackDelay > AttackCoolDown)
         {
-            AttackDelay = 0;
-            --mAmmo;
+            GameObject g = Manager.Instance.GetBullet();
+            if(g != null)
+            {
+                AttackDelay = 0;
+                --mAmmo;
 
-            GameObject p = Instantiate(pProjectile, this.transform.position, this.transform.rotation) as GameObject; //this might wanna make an empty object infront of controller or with an offset
-            Rigidbody PRB = p.GetComponent<Rigidbody>();
-            PRB.AddForce(PRB.transform.forward * ProjectileSpeed, ForceMode.Impulse); //needs to be tested!!!
+                g.SetActive(true);
+                g.transform.position = this.transform.position; //this might wanna make an empty object infront of controller or with an offset
+                g.transform.rotation = this.transform.rotation;
+                g.GetComponent<Rigidbody>().AddForce(transform.forward * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!
+            }
+            else
+                Debug.Log("NOT ENOUGH BULLETS");
         }
     }
 
     void Pause(object sender, ClickedEventArgs e)
     {
         Debug.Log("FOUND");
-        UiManager.Instance.TogglePause();//<--VR player pause seperate??
+        Manager.Instance.TogglePause();
     }
 
     void Fly()
@@ -66,15 +77,20 @@ public class VrPlayer : MonoBehaviour
 
             if (mHealth <= 0)
             {
-                UiManager.Instance.SetUpdatable(false);
+                Manager.Instance.SetUpdatable(false);
             }
+        }
+        if(other.gameObject.tag == "Ammo")
+        {
+            Debug.Log("VR picked up ammo");
+            mAmmo += NumAmmo;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(UiManager.Instance.IsUpdatable())
+        if(Manager.Instance.IsUpdatable())
         {
             AttackDelay += Time.deltaTime;
 
