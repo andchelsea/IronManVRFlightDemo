@@ -14,9 +14,6 @@ public class Manager : MonoBehaviour {
     [SerializeField] private GameObject pEnemy;
     public GameObject[] BulletPool;
     [SerializeField] private GameObject pBullet;
-    public GameObject[] FlarePool;
-    public GameObject pFlare1;//move into pc player
-    public GameObject pFlare2;//move into pc player
     public GameObject[] AmmoPackPool;
     [SerializeField] private GameObject pAmmo;
 
@@ -45,13 +42,6 @@ public class Manager : MonoBehaviour {
         {
             BulletPool[i] = Instantiate(pBullet, this.transform.position, this.transform.rotation) as GameObject;
             BulletPool[i].SetActive(false);
-        }
-
-        FlarePool = new GameObject[2];
-        for (int i = 0; i < 2; ++i)
-        {
-            FlarePool[i] = Instantiate(pBullet, this.transform.position, this.transform.rotation) as GameObject;
-            FlarePool[i].SetActive(false);
         }
 
         AmmoPackPool = new GameObject[AmmoNum];

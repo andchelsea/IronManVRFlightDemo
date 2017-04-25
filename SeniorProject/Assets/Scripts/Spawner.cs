@@ -14,18 +14,19 @@ public class Spawner : MonoBehaviour {
 
     [SerializeField] private float minPos = 10.0f;
     [SerializeField] private float maxPos = 25.0f;
-    [SerializeField] private Transform VRPlayer;
+    private Transform VRPlayer;
     [SerializeField] private BoxCollider PlayArea;
 
     // Use this for initialization
-    private void Awake()
+    private void Start()
     {
         if (Instance != null && Instance != this)
             Destroy(this.gameObject);
         Instance = this;
 
         PlayArea = GameObject.FindGameObjectWithTag("PlayArea").GetComponent<BoxCollider>();
-	}
+        VRPlayer = VrPlayer.Instance.gameObject.transform;
+    }
 
     Vector3 SpawnablePos()
     {
@@ -64,7 +65,7 @@ public class Spawner : MonoBehaviour {
                     e.GetComponent<EnemyScript>().Reset();
                     e.transform.position = SpawnablePos();
                     //e.GetComponent<EnemyScript>().playerPosition = VrPlayer.Instance.transform.position;
-                    e.GetComponent<Rigidbody>().velocity=e.transform.forward*EnemyFlySpeed;//needs to be tested!!! (different force modes)
+                    e.GetComponent<Rigidbody>().velocity = e.transform.forward * EnemyFlySpeed;//needs to be tested!!! (different force modes)
                     //move the above to the enemy script???
                 }
                 else

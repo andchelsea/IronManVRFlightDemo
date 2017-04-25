@@ -7,16 +7,26 @@ public class FlareScript : MonoBehaviour {
     private float timer = 0.0f;
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
 	
 	}
+
+    public void Reset()
+    {
+        timer = 0.0f;
+        this.GetComponent<GameObject>().SetActive(true);
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        timer += Time.deltaTime;
-	    if(timer>FlareDeactivate)
+        if (Manager.Instance.IsUpdatable())
         {
-            this.GetComponent<GameObject>().SetActive(false);
+            timer += Time.deltaTime;
+            if (timer > FlareDeactivate)
+            {
+                this.GetComponent<GameObject>().SetActive(false);
+            }
         }
 	}
 }

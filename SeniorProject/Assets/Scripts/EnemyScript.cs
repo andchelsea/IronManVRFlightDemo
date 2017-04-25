@@ -14,7 +14,7 @@ public class EnemyScript : MonoBehaviour
     {
        // GetComponent<Material>().shader = unlit;
         Lifetime = life;
-        PlayerPos = GameObject.FindGameObjectWithTag("Player").transform;
+        PlayerPos = VrPlayer.Instance.gameObject.transform;
         rb = GetComponent<Rigidbody>();
     }
 
