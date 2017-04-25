@@ -11,9 +11,14 @@ public class Manager : MonoBehaviour {
     [SerializeField] int EnemyNum = 50;
     [SerializeField] int AmmoNum = 10;
     public GameObject[] EnemyPool;
+    [SerializeField] private GameObject pEnemy;
     public GameObject[] BulletPool;
+    [SerializeField] private GameObject pBullet;
     public GameObject[] FlarePool;
+    public GameObject pFlare1;//move into pc player
+    public GameObject pFlare2;//move into pc player
     public GameObject[] AmmoPackPool;
+    [SerializeField] private GameObject pAmmo;
 
     private bool updatable = true;
 
@@ -31,28 +36,28 @@ public class Manager : MonoBehaviour {
         EnemyPool = new GameObject[EnemyNum];
         for(int i =0; i<EnemyNum; ++i)
         {
-            EnemyPool[i] =  Instantiate(EnemyPool[i], this.transform.position, this.transform.rotation) as GameObject;
+            EnemyPool[i] =  Instantiate(pEnemy, this.transform.position, this.transform.rotation) as GameObject;
             EnemyPool[i].SetActive(false);
         }
 
         BulletPool = new GameObject[BulletNum];
         for (int i = 0; i < BulletNum; ++i)
         {
-            BulletPool[i] = Instantiate(BulletPool[i], this.transform.position, this.transform.rotation) as GameObject;
+            BulletPool[i] = Instantiate(pBullet, this.transform.position, this.transform.rotation) as GameObject;
             BulletPool[i].SetActive(false);
         }
 
         FlarePool = new GameObject[2];
         for (int i = 0; i < 2; ++i)
         {
-            FlarePool[i] = Instantiate(FlarePool[i], this.transform.position, this.transform.rotation) as GameObject;
+            FlarePool[i] = Instantiate(pBullet, this.transform.position, this.transform.rotation) as GameObject;
             FlarePool[i].SetActive(false);
         }
 
         AmmoPackPool = new GameObject[AmmoNum];
-        for (int i = 0; i < BulletNum; ++i)
+        for (int i = 0; i < AmmoNum; ++i)
         {
-            AmmoPackPool[i] = Instantiate(AmmoPackPool[i], this.transform.position, this.transform.rotation) as GameObject;
+            AmmoPackPool[i] = Instantiate(pAmmo, this.transform.position, this.transform.rotation) as GameObject;
             AmmoPackPool[i].SetActive(false);
         }
     }
@@ -98,6 +103,7 @@ public class Manager : MonoBehaviour {
                 return EnemyPool[i];
             }
         }
+        Debug.Log("Not Enough Enemies");
         return null;
     }
 
@@ -115,7 +121,7 @@ public class Manager : MonoBehaviour {
 
     public GameObject GetAmmoPack()
     {
-        for (int i = 0; i < BulletNum; ++i)
+        for (int i = 0; i < AmmoNum; ++i)
         {
             if (!AmmoPackPool[i].activeInHierarchy)
             {

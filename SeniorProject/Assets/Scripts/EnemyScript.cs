@@ -3,19 +3,29 @@ using System.Collections;
 
 public class EnemyScript : MonoBehaviour
 {
-    [SerializeField] private float Lifetime = 3;//needed?
-
+    private float Lifetime = 3;//needed?
+    [SerializeField] private float life = 0;
     [SerializeField] private Shader unlit;//make a shader
     [SerializeField] private Shader lit;//make a shader
-
+    Transform PlayerPos;
+    Rigidbody rb;
     // Use this for initialization
     void Start ()
     {
-        GetComponent<Material>().shader = unlit;
+       // GetComponent<Material>().shader = unlit;
+        Lifetime = life;
+        PlayerPos = GameObject.FindGameObjectWithTag("Player").transform;
+        rb = GetComponent<Rigidbody>();
     }
-	
+
+	public void Reset()
+    {
+        Lifetime = life;
+        this.gameObject.SetActive(true);
+    }
+
 	// Update is called once per frame
-	void Update()
+	void FixedUpdate()
     {
         if (Manager.Instance.IsUpdatable())
         { 
@@ -23,23 +33,25 @@ public class EnemyScript : MonoBehaviour
             if (Lifetime < 0.0f)
                 this.gameObject.SetActive(false);//will this work??
 
-            transform.LookAt(VrPlayer.Instance.transform.position);
+            transform.LookAt(PlayerPos);
+            rb.velocity = rb.velocity.magnitude * transform.forward;
+            
         }
     }
 
     void OnMouseEnter()
     {
-        GetComponent<Material>().shader = lit;//testing required
+        //GetComponent<Material>().shader = lit;//testing required
     }
 
     void OnMouseExit()
     {
-        GetComponent<Material>().shader = unlit;
+        //GetComponent<Material>().shader = unlit;
     }
 
-    void OnCollisionEnter(Collision other)
+    void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "MainCamera")
+        if (other.gameObject.tag == "Player")
         {
             Debug.Log("Enemy hit VR Player!");
             //Destroy(this.gameObject);

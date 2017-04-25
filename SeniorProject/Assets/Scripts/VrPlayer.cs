@@ -27,9 +27,7 @@ public class VrPlayer : MonoBehaviour
     // Use this for initialization
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-            Destroy(this.gameObject);
-        Instance = this;
+  
 
         Controller = GetComponent<SteamVR_TrackedController>();
         Controller.PadClicked += Attack;
@@ -38,6 +36,7 @@ public class VrPlayer : MonoBehaviour
 
     void Attack(object sender, ClickedEventArgs e)
     {
+
         if (mAmmo > 0 && AttackDelay > AttackCoolDown)
         {
             GameObject g = Manager.Instance.GetBullet();
@@ -46,7 +45,7 @@ public class VrPlayer : MonoBehaviour
                 AttackDelay = 0;
                 --mAmmo;
 
-                g.SetActive(true);
+                g.GetComponent<Bullet>().Reset();
                 g.transform.position = this.transform.position; //this might wanna make an empty object infront of controller or with an offset
                 g.transform.rotation = this.transform.rotation;
                 g.GetComponent<Rigidbody>().AddForce(transform.forward * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!

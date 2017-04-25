@@ -14,7 +14,7 @@ public class Spawner : MonoBehaviour {
 
     [SerializeField] private float minPos = 10.0f;
     [SerializeField] private float maxPos = 25.0f;
-
+    [SerializeField] private Transform VRPlayer;
     [SerializeField] private BoxCollider PlayArea;
 
     // Use this for initialization
@@ -34,7 +34,7 @@ public class Spawner : MonoBehaviour {
 
         while (!spawnable)
         {
-            pos = VrPlayer.Instance.transform.position;
+            pos = VRPlayer.position;
             pos += (Random.insideUnitSphere*Random.Range(minPos,maxPos));
             if(PlayArea.bounds.Contains(pos))
             {
@@ -54,24 +54,24 @@ public class Spawner : MonoBehaviour {
             EnemyDelay += Time.deltaTime;
             AmmoDelay += Time.deltaTime;
 
-            if (EnemyDelay < EnemySpawnCoolDown)
+            if (EnemyDelay > EnemySpawnCoolDown)
             {
                 GameObject e = Manager.Instance.GetEnemy();
 
                 if(e != null)
                 {
                     EnemyDelay = 0;
-
+                    e.GetComponent<EnemyScript>().Reset();
                     e.transform.position = SpawnablePos();
                     //e.GetComponent<EnemyScript>().playerPosition = VrPlayer.Instance.transform.position;
-                    e.GetComponent<Rigidbody>().AddForce(transform.forward * EnemyFlySpeed, ForceMode.Force);//needs to be tested!!! (different force modes)
+                    e.GetComponent<Rigidbody>().velocity=e.transform.forward*EnemyFlySpeed;//needs to be tested!!! (different force modes)
                     //move the above to the enemy script???
                 }
                 else
                     Debug.Log("NOT ENOUGH ENEMIES");
             }
 
-            if (AmmoDelay < AmmoSpawnCoolDown)
+            if (AmmoDelay > AmmoSpawnCoolDown)
             {
                 GameObject e = Manager.Instance.GetAmmoPack();
                 if (e != null)
