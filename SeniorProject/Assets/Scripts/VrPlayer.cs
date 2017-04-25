@@ -1,70 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class VrPlayer : MonoBehaviour
-{
+public class VrPlayer : MonoBehaviour {
+
     public static VrPlayer Instance;
 
-    [SerializeField] private Rigidbody Rb;//probably head/torso, needed to apply velocity
-    [SerializeField] private float FlySpeed = 15; //arbitrary starting numbers, playtest
-    [SerializeField] private float MaxSpeed = 150; //arbitrary starting numbers, playtest
-    [SerializeField] private float ProjectileSpeed = 15; //arbitrary starting numbers, playtest
-    [SerializeField] private float AttackCoolDown = 0.5f; 
+    [SerializeField] public Rigidbody Rb;//probably head/torso, needed to apply velocity
+    [SerializeField] public float FlySpeed = 15; //arbitrary starting numbers, playtest
+    [SerializeField] public float MaxSpeed = 150; //arbitrary starting numbers, playtest
+    [SerializeField] public float ProjectileSpeed = 15; //arbitrary starting numbers, playtest
+
+    //privates
     private float AttackDelay = 0;
-
-    private SteamVR_TrackedController Controller;//used for controller update
-    //private SteamVR_Controller.Device Device;//used for touchpad update. Needed?
-
-    //private GameObject pProjectile;//make a prefab
-
-    [SerializeField] private int mHealth = 10;
-    [SerializeField] private int mAmmo = 10; //arbitrary starting numbers, playtest
+    [SerializeField] private float AttackCoolDown = 0.5f;
+    [SerializeField] private int Health = 10;
+    [SerializeField] private int Ammo = 10; //arbitrary starting numbers, playtest
     [SerializeField] private int NumAmmo = 10; //arbitrary starting numbers, playtest
-
-
-    public int GetHealth() { return mHealth; }
-
-    // Use this for initialization
-    private void Awake()
+    void Awake ()
     {
-  
-
-        Controller = GetComponent<SteamVR_TrackedController>();
-        Controller.PadClicked += Attack;
-        Controller.MenuButtonClicked += Pause; //add Pause menu here
+        if (Instance != null && Instance != this)
+            Destroy(this.gameObject);
+        Instance = this;
     }
 
-    void Attack(object sender, ClickedEventArgs e)
+    public int GetHealth() { return Health; }
+    public bool Shootable()
     {
-
-        if (mAmmo > 0 && AttackDelay > AttackCoolDown)
+        if (Ammo > 0 && AttackDelay > AttackCoolDown)
         {
-            GameObject g = Manager.Instance.GetBullet();
-            if(g != null)
-            {
-                AttackDelay = 0;
-                --mAmmo;
-
-                g.GetComponent<Bullet>().Reset();
-                g.transform.position = this.transform.position; //this might wanna make an empty object infront of controller or with an offset
-                g.transform.rotation = this.transform.rotation;
-                g.GetComponent<Rigidbody>().AddForce(transform.forward * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!
-            }
-            else
-                Debug.Log("NOT ENOUGH BULLETS");
+            --Ammo;
+            AttackDelay = 0;
+            return true;
         }
-    }
-
-    void Pause(object sender, ClickedEventArgs e)
-    {
-        Debug.Log("FOUND");
-        Manager.Instance.TogglePause();
-    }
-
-    void Fly()
-    {
-        if(Rb.velocity.magnitude < MaxSpeed)
-            Rb.AddForce(-Controller.transform.forward*FlySpeed);//needs drag force
+        else
+            return false;
     }
 
     void OnCollisionEnter(Collision other)
@@ -72,31 +41,29 @@ public class VrPlayer : MonoBehaviour
         if (other.gameObject.tag == "Enemy")
         {
             Debug.Log("Enemy hit you!");
-            --mHealth;
+            --Health;
 
-            if (mHealth <= 0)
+            if (Health <= 0)
             {
                 Manager.Instance.SetUpdatable(false);
             }
         }
-        if(other.gameObject.tag == "Ammo")
+        //may need to be on the hands (and body?) for ammo
+        if (other.gameObject.tag == "Ammo")
         {
             Debug.Log("VR picked up ammo");
-            mAmmo += NumAmmo;
+            Ammo += NumAmmo;
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    // Use this for initialization
+	
+	// Update is called once per frame
+	void Update ()
     {
-        if(Manager.Instance.IsUpdatable())
+        if (Manager.Instance.IsUpdatable())
         {
             AttackDelay += Time.deltaTime;
-
-            if(Controller.triggerPressed)
-            {
-                Fly();
-            }
         }
     }
 }

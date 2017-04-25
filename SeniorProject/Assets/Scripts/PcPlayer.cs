@@ -17,8 +17,8 @@ public class PcPlayer : MonoBehaviour
 
     [SerializeField] private float MaxRayDist = 120.0f;
 
-    private GameObject pFlare1;//make a prefab
-    private GameObject pFlare2;//make a prefab
+    [SerializeField] private GameObject pFlare1;//make a prefab
+    [SerializeField] private GameObject pFlare2;//make a prefab
     [SerializeField] private float FlareCoolDown = 1.0f;
     private float Flare1Delay = 0.0f;
     private float Flare2Delay = 0.0f;
@@ -33,8 +33,9 @@ public class PcPlayer : MonoBehaviour
         Rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked; //add crosshair
         Cursor.visible = false;
-        pFlare1 = Manager.Instance.FlarePool[0];
-        pFlare2 = Manager.Instance.FlarePool[1];
+        //pFlare1 = = Instantiate(pFlare1, this.transform.position, this.transform.rotation) as GameObject;
+        pFlare1.SetActive(false);//needs to be instatiated??
+        pFlare2.SetActive(false);//needs to be instatiated??
     }
 	
 	// Update is called once per frame
@@ -75,20 +76,22 @@ public class PcPlayer : MonoBehaviour
                // info.collider.gameObject.GetComponent<Material>().shader = lit;
                if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
                 {
-                    pFlare1.SetActive(true);//either make a flare script to auto deactivate over time or remove
+                    Debug.Log("Looking at Enemy");
+                    pFlare1.GetComponent<FlareScript>().Reset();//either make a flare script to auto deactivate over time or remove
                     pFlare1.transform.position = info.transform.position;
                     Flare1Delay = 0.0f;
                 }
                else if(Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
                 {
-                    pFlare2.SetActive(true);
+                    Debug.Log("Looking at Ammo");
+                    pFlare1.GetComponent<FlareScript>().Reset();
                     pFlare2.transform.position = info.transform.position;
                     Flare2Delay = 0.0f;
                 }
             }
         }
 
-      if( Input.GetButtonDown("Submit"))//either make into axis or getbutton down?
+      if( Input.GetButtonDown("Submit"))
         {
             Debug.Log("FOUND");
             Manager.Instance.TogglePause();
