@@ -3,22 +3,37 @@ using System.Collections;
 
 public class AmmoPackScript : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    [SerializeField] private Shader unlit;//make a shader
+    [SerializeField] private Shader lit;//make a shader
+
+    // Use this for initialization
+    void Start ()
+    {
 	
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
 	
 	}
 
+    void OnMouseEnter()
+    {
+        //GetComponent<Material>().shader = lit;//testing required
+    }
+
+    void OnMouseExit()
+    {
+        //GetComponent<Material>().shader = unlit;
+    }
+
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "MainCamera")
+        if (other.gameObject.tag == "Player")
         {
             Debug.Log("Player picked you up");
-            //ADD in making this obj inactive????
+            this.GetComponent<GameObject>().SetActive(false);
         }
     }
 }
