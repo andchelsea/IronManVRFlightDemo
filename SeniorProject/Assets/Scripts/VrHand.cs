@@ -15,7 +15,6 @@ public class VrHand : MonoBehaviour
         Controller = GetComponent<SteamVR_TrackedController>();
         Controller.PadClicked += Attack;
         Controller.MenuButtonClicked += Pause; //add Pause menu here
-
         ProjectileSpeed = VrPlayer.Instance.ProjectileSpeed;
         FlySpeed = VrPlayer.Instance.FlySpeed;
         MaxSpeed = VrPlayer.Instance.MaxSpeed;
@@ -27,15 +26,16 @@ public class VrHand : MonoBehaviour
     {
         if (VrPlayer.Instance.Shootable())
         {
-            GameObject g = Manager.Instance.GetBullet();
+            GameObject g = Manager.Instance.GetBullet();//small possiblility to get rid of ammo without spawning
             if(g != null)
             {
                 g.GetComponent<Bullet>().Reset();
                 g.transform.position = this.transform.position; //this might wanna make an empty object infront of controller or with an offset
 
                 //Gives bullets funky rotations, FIX???
-                g.transform.rotation = this.transform.rotation;
-                g.GetComponent<Rigidbody>().AddForce(transform.forward * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!
+                //Vector3 v = 
+                g.transform.rotation = new Quaternion(this.transform.rotation.x, this.transform.rotation.y, this.transform.rotation.z, this.transform.rotation.w);
+                g.GetComponent<Rigidbody>().AddForce(new Vector3(this.transform.forward.x, this.transform.forward.y, this.transform.forward.z) * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!
             }
             else
                 Debug.Log("NOT ENOUGH BULLETS");
@@ -50,8 +50,11 @@ public class VrHand : MonoBehaviour
 
     void Fly()
     {
-        if(Rb.velocity.magnitude < MaxSpeed)
-            Rb.AddForce(-Controller.transform.forward*FlySpeed);//needs drag force
+        //float triggerpress = SteamVR_Controller.Input((int)Controller.controllerIndex).hairTriggerDelta;
+        if (Rb.velocity.magnitude < MaxSpeed)
+            Rb.AddForce(-Controller.transform.forward * FlySpeed);// * triggerpress);//needs drag force
+        SteamVR_Controller.Input((int)Controller.controllerIndex).TriggerHapticPulse();
+        ;
     }
 
 

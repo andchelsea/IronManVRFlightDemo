@@ -9,7 +9,7 @@ public class VrPlayer : MonoBehaviour {
     [SerializeField] public float FlySpeed = 15; //arbitrary starting numbers, playtest
     [SerializeField] public float MaxSpeed = 150; //arbitrary starting numbers, playtest
     [SerializeField] public float ProjectileSpeed = 15; //arbitrary starting numbers, playtest
-
+    [SerializeField] public float gravMultiplier = 0.5f;
     //privates
     private float AttackDelay = 0;
     [SerializeField] private float AttackCoolDown = 0.5f; //arbitrary starting numbers, playtest
@@ -46,16 +46,7 @@ public class VrPlayer : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.collider.tag == "Enemy")
-        {
-            Debug.Log("Enemy hit you!");
-            --Health;
 
-            if (Health <= 0)
-            {
-                Manager.Instance.SetUpdatable(false);
-            }
-        }
         if (other.collider.tag == "Land")
         {
             Rb.mass = 2;
@@ -65,6 +56,17 @@ public class VrPlayer : MonoBehaviour {
     }
     void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "Enemy")
+        {
+            Debug.Log("Enemy hit you!");
+            --Health;
+
+            if (Health <= 0)
+            {
+                Manager.Instance.SetUpdatable(false);
+            }
+        }
+
         if (other.tag == "Ammo")
         {
             Debug.Log("VR picked up ammo");
@@ -80,5 +82,6 @@ public class VrPlayer : MonoBehaviour {
         {
             AttackDelay += Time.deltaTime;
         }
+        Rb.AddForce(Physics.gravity*gravMultiplier,ForceMode.Force);
     }
 }

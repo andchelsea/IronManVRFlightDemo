@@ -73,30 +73,33 @@ public class PcPlayer : MonoBehaviour
 
             //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit info = new RaycastHit();
-            Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out info, MaxRayDist);
 
             //Debug.Log(info.collider.tag.ToString());
 
-           // if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")
+            if(Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out info, MaxRayDist))
             {
-               // info.collider.gameObject.GetComponent<Material>().shader = lit;
-               if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
-                {
-                    Debug.Log("Looking at Enemy");
-                    pFlare1.transform.position = info.point;
-                    pFlare1.GetComponent<FlareScript>().Reset();//either make a flare script to auto deactivate over time or remove
-                    Flare1Delay = 0.0f;
-                }
-               else if(Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
-                {
-                    Debug.Log("Looking at Ammo");
-                    pFlare2.transform.position = info.point;
-                    pFlare2.GetComponent<FlareScript>().Reset();
-                    Flare2Delay = 0.0f;
-                }
-            }
-        }
 
+                    if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")
+                    {
+                       // info.collider.gameObject.GetComponent<Material>().shader = lit;
+                       if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
+                        {
+                            Debug.Log("Looking at Enemy");
+                            pFlare1.transform.position = info.point;
+                            pFlare1.GetComponent<FlareScript>().Reset();//either make a flare script to auto deactivate over time or remove
+                            Flare1Delay = 0.0f;
+                        }
+                       else if(Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
+                        {
+                            Debug.Log("Looking at Ammo");
+                            pFlare2.transform.position = info.point;
+                            pFlare2.GetComponent<FlareScript>().Reset();
+                            Flare2Delay = 0.0f;
+                        }
+                    }
+            }
+      }
+    
       if( Input.GetButtonDown("Submit"))
         {
             Debug.Log("FOUND");

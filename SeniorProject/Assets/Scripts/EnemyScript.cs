@@ -49,6 +49,7 @@ public class EnemyScript : MonoBehaviour
         //GetComponent<Material>().shader = unlit;
     }
 
+
     void OnCollisionEnter(Collision other)
     {
         if (other.collider.tag == "Player")
@@ -64,7 +65,7 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    /*
+    
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -79,6 +80,6 @@ public class EnemyScript : MonoBehaviour
             this.gameObject.SetActive(false);//will this work??
         }
     }
-     */
+     
 
 }
