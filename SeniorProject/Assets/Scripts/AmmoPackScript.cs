@@ -28,9 +28,9 @@ public class AmmoPackScript : MonoBehaviour {
         //GetComponent<Material>().shader = unlit;
     }
 
-    void OnCollisionEnter(Collision other)
+    void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.tag == "Player")
         {
             Debug.Log("Player picked you up");
             this.GetComponent<GameObject>().SetActive(false);

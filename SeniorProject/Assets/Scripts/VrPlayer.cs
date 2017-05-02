@@ -46,7 +46,7 @@ public class VrPlayer : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Enemy")
+        if (other.collider.tag == "Enemy")
         {
             Debug.Log("Enemy hit you!");
             --Health;
@@ -61,13 +61,16 @@ public class VrPlayer : MonoBehaviour {
             Rb.mass = 2;
         }
         //may need to be on the hands (and body?) for ammo
-        if (other.gameObject.tag == "Ammo")
+        
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Ammo")
         {
             Debug.Log("VR picked up ammo");
             Ammo += NumAmmo;
         }
     }
-
     // Use this for initialization
 	
 	// Update is called once per frame

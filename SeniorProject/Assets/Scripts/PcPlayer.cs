@@ -75,7 +75,7 @@ public class PcPlayer : MonoBehaviour
             RaycastHit info = new RaycastHit();
             Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out info, MaxRayDist);
 
-            Debug.Log(info.collider.tag.ToString());
+            //Debug.Log(info.collider.tag.ToString());
 
            // if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")
             {

@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour
     }
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Enemy")
+        if (other.collider.tag == "Enemy")
         {
             Debug.Log("Bullet hit an Enemy!");
             this.gameObject.SetActive(false);
