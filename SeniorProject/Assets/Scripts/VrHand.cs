@@ -25,7 +25,6 @@ public class VrHand : MonoBehaviour
 
     void Attack(object sender, ClickedEventArgs e)
     {
-
         if (VrPlayer.Instance.Shootable())
         {
             GameObject g = Manager.Instance.GetBullet();

@@ -34,7 +34,11 @@ public class PcPlayer : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked; //add crosshair
         Cursor.visible = false;
         //pFlare1 = = Instantiate(pFlare1, this.transform.position, this.transform.rotation) as GameObject;
-        pFlare1.SetActive(false);//needs to be instatiated??
+
+        pFlare1 = Instantiate(pFlare1, this.transform.position, this.transform.rotation) as GameObject;// as GameObject;
+        pFlare1.SetActive(false);
+
+        pFlare2 = Instantiate(pFlare2);
         pFlare2.SetActive(false);//needs to be instatiated??
     }
 	
@@ -69,23 +73,25 @@ public class PcPlayer : MonoBehaviour
 
             //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit info = new RaycastHit();
-            Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out info, MaxRayDist);
+            Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out info, MaxRayDist);
 
-            if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")
+            Debug.Log(info.collider.tag.ToString());
+
+           // if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")
             {
                // info.collider.gameObject.GetComponent<Material>().shader = lit;
                if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
                 {
                     Debug.Log("Looking at Enemy");
+                    pFlare1.transform.position = info.point;
                     pFlare1.GetComponent<FlareScript>().Reset();//either make a flare script to auto deactivate over time or remove
-                    pFlare1.transform.position = info.transform.position;
                     Flare1Delay = 0.0f;
                 }
                else if(Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
                 {
                     Debug.Log("Looking at Ammo");
-                    pFlare1.GetComponent<FlareScript>().Reset();
-                    pFlare2.transform.position = info.transform.position;
+                    pFlare2.transform.position = info.point;
+                    pFlare2.GetComponent<FlareScript>().Reset();
                     Flare2Delay = 0.0f;
                 }
             }

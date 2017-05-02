@@ -15,7 +15,8 @@ public class FlareScript : MonoBehaviour {
     public void Reset()
     {
         timer = 0.0f;
-        this.GetComponent<GameObject>().SetActive(true);
+        this.gameObject.SetActive(true);
+        this.GetComponent<ParticleSystem>().Play();
     }
 	
 	// Update is called once per frame
@@ -25,7 +26,8 @@ public class FlareScript : MonoBehaviour {
             timer += Time.deltaTime;
             if (timer > FlareDeactivate)
             {
-                this.GetComponent<GameObject>().SetActive(false);
+                this.gameObject.SetActive(false);
+                this.GetComponent<ParticleSystem>().Stop();
             }
         }
 	}

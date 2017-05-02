@@ -12,8 +12,8 @@ public class VrPlayer : MonoBehaviour {
 
     //privates
     private float AttackDelay = 0;
-    [SerializeField] private float AttackCoolDown = 0.5f;
-    [SerializeField] private int Health = 10;
+    [SerializeField] private float AttackCoolDown = 0.5f; //arbitrary starting numbers, playtest
+    [SerializeField] private int Health = 10; //arbitrary starting numbers, playtest
     [SerializeField] private int Ammo = 10; //arbitrary starting numbers, playtest
     [SerializeField] private int NumAmmo = 10; //arbitrary starting numbers, playtest
     void Awake ()
