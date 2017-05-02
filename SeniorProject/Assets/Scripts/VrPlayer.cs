@@ -23,6 +23,14 @@ public class VrPlayer : MonoBehaviour {
         Instance = this;
     }
 
+    void OnCollisionExit(Collision other)
+    {
+
+        if (other.collider.tag == "Land")
+        {
+            Rb.mass = 0.5f;
+        }
+    }
     public int GetHealth() { return Health; }
     public bool Shootable()
     {
@@ -47,6 +55,10 @@ public class VrPlayer : MonoBehaviour {
             {
                 Manager.Instance.SetUpdatable(false);
             }
+        }
+        if (other.collider.tag == "Land")
+        {
+            Rb.mass = 2;
         }
         //may need to be on the hands (and body?) for ammo
         if (other.gameObject.tag == "Ammo")
