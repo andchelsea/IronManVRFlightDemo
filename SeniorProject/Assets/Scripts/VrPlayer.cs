@@ -34,7 +34,7 @@ public class VrPlayer : MonoBehaviour {
     public int GetHealth() { return Health; }
     public bool Shootable()
     {
-        if (Ammo > 0 && AttackDelay > AttackCoolDown)
+        if (Ammo > 0 && AttackDelay > AttackCoolDown && Manager.Instance.IsUpdatable())
         {
             --Ammo;
             AttackDelay = 0;
@@ -52,7 +52,6 @@ public class VrPlayer : MonoBehaviour {
             Rb.mass = 2;
         }
         //may need to be on the hands (and body?) for ammo
-        
     }
     void OnTriggerEnter(Collider other)
     {

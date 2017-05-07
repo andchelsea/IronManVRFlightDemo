@@ -33,7 +33,6 @@ public class VrHand : MonoBehaviour
                 g.transform.position = this.transform.position; //this might wanna make an empty object infront of controller or with an offset
 
                 //Gives bullets funky rotations, FIX???
-                //Vector3 v = 
                 g.transform.rotation = new Quaternion(this.transform.rotation.x, this.transform.rotation.y, this.transform.rotation.z, this.transform.rotation.w);
                 g.GetComponent<Rigidbody>().AddForce(new Vector3(this.transform.forward.x, this.transform.forward.y, this.transform.forward.z) * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!
             }
