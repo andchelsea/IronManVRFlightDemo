@@ -19,9 +19,8 @@ public class VrHand : MonoBehaviour
         FlySpeed = VrPlayer.Instance.FlySpeed;
         MaxSpeed = VrPlayer.Instance.MaxSpeed;
         Rb = VrPlayer.Instance.Rb;
-
     }
-
+    
     void Attack(object sender, ClickedEventArgs e)
     {
         if (VrPlayer.Instance.Shootable())
@@ -34,7 +33,7 @@ public class VrHand : MonoBehaviour
 
                 //Gives bullets funky rotations, FIX???
                 //Vector3 v = 
-                g.transform.rotation = new Quaternion(this.transform.rotation.x, this.transform.rotation.y, this.transform.rotation.z, this.transform.rotation.w);
+                g.transform.rotation = this.transform.rotation;//   new Quaternion(this.transform.rotation.x, this.transform.rotation.y, this.transform.rotation.z, this.transform.rotation.w);
                 g.GetComponent<Rigidbody>().AddForce(new Vector3(this.transform.forward.x, this.transform.forward.y, this.transform.forward.z) * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!
             }
             else
@@ -54,7 +53,7 @@ public class VrHand : MonoBehaviour
         if (Rb.velocity.magnitude < MaxSpeed)
             Rb.AddForce(-Controller.transform.forward * FlySpeed);// * triggerpress);//needs drag force
         SteamVR_Controller.Input((int)Controller.controllerIndex).TriggerHapticPulse();
-        ;
+   
     }
 
 
