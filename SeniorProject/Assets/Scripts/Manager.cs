@@ -19,6 +19,8 @@ public class Manager : MonoBehaviour {
 
     private bool updatable = true;
 
+
+    int nextAvaliableBullet = 0;
 	// Use this for initialization
 	private void Awake ()
     {
@@ -99,21 +101,27 @@ public class Manager : MonoBehaviour {
 
     public GameObject GetBullet()
     {
-        for (int i = 0; i < BulletNum; ++i)
-        {
-            if (!BulletPool[i].activeInHierarchy)
-            {
-                return BulletPool[i];
-            }
-        }
-        return null;
+        //TEST THIS ITS NEW 
+        nextAvaliableBullet++;
+        nextAvaliableBullet %= BulletNum;
+
+        return BulletPool [nextAvaliableBullet];
+
+        //for (int i = 0; i < BulletNum; ++i)
+        //{
+        //    if (!BulletPool[i].activeInHierarchy)
+        //    {
+        //        return BulletPool[i];
+        //    }
+        //}
+        //return null;
     }
 
     public GameObject GetAmmoPack()
     {
         for (int i = 0; i < AmmoNum; ++i)
         {
-            if (!AmmoPackPool[i].activeInHierarchy)
+            if (!AmmoPackPool[i].activeInHierarchy) //active in hierarchy could be wrong call. use active self instead. Use a current place to speed up check
             {
                 return AmmoPackPool[i];
             }

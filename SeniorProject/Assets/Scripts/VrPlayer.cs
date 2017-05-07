@@ -9,7 +9,9 @@ public class VrPlayer : MonoBehaviour {
     [SerializeField] public float FlySpeed = 15; //arbitrary starting numbers, playtest
     [SerializeField] public float MaxSpeed = 150; //arbitrary starting numbers, playtest
     [SerializeField] public float ProjectileSpeed = 15; //arbitrary starting numbers, playtest
-    [SerializeField] public float gravMultiplier = 0.5f;
+    [SerializeField] public float lowGrav = 0.5f;
+    [SerializeField] public float highGrav= 1.0f;
+    public float gravMultiplier= 1.0f;
     //privates
     private float AttackDelay = 0;
     [SerializeField] private float AttackCoolDown = 0.5f; //arbitrary starting numbers, playtest
@@ -21,6 +23,7 @@ public class VrPlayer : MonoBehaviour {
         if (Instance != null && Instance != this)
             Destroy(this.gameObject);
         Instance = this;
+        gravMultiplier = highGrav;
     }
 
     void OnCollisionExit(Collision other)
@@ -71,9 +74,19 @@ public class VrPlayer : MonoBehaviour {
             Debug.Log("VR picked up ammo");
             Ammo += NumAmmo;
         }
+        if(other.tag=="Land")
+        {
+            gravMultiplier = highGrav;
+        }
     }
     // Use this for initialization
-	
+	void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Land")
+        {
+            gravMultiplier = lowGrav;
+        }
+    }
 	// Update is called once per frame
 	void Update ()
     {

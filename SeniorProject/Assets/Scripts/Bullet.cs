@@ -40,4 +40,12 @@ public class Bullet : MonoBehaviour
             this.gameObject.SetActive(false);
         }
     }
+    void OnCollisionTrigger(Collider other)
+    {
+        if (other.tag == "Enemy")
+        {
+            Debug.Log("Bullet hit an Enemy!");
+            this.gameObject.SetActive(false);
+        }
+    }
 }
