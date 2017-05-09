@@ -84,14 +84,12 @@ public class PcPlayer : MonoBehaviour
                        // info.collider.gameObject.GetComponent<Material>().shader = lit;
                        if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
                         {
-                            Debug.Log("Looking at Enemy");
                             pFlare1.transform.position = info.point;
                             pFlare1.GetComponent<FlareScript>().Reset();//either make a flare script to auto deactivate over time or remove
                             Flare1Delay = 0.0f;
                         }
                        else if(Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
                         {
-                            Debug.Log("Looking at Ammo");
                             pFlare2.transform.position = info.point;
                             pFlare2.GetComponent<FlareScript>().Reset();
                             Flare2Delay = 0.0f;
@@ -102,7 +100,6 @@ public class PcPlayer : MonoBehaviour
     
       if( Input.GetButtonDown("Submit"))
         {
-            Debug.Log("FOUND");
             Manager.Instance.TogglePause();
             //SceneManager.LoadScene("MainMenu",LoadSceneMode.Single);
         }

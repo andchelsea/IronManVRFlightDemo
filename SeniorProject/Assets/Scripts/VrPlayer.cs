@@ -11,13 +11,13 @@ public class VrPlayer : MonoBehaviour {
     [SerializeField] public float ProjectileSpeed = 15; //arbitrary starting numbers, playtest
     [SerializeField] public float lowGrav = 0.5f;
     [SerializeField] public float highGrav= 1.0f;
+    [SerializeField] public int Ammo = 10; //arbitrary starting numbers, playtest
     public float gravMultiplier= 1.0f;
     //privates
     private float AttackDelay = 0;
     [SerializeField] private float AttackCoolDown = 0.5f; //arbitrary starting numbers, playtest
-    [SerializeField] private int Health = 10; //arbitrary starting numbers, playtest
-    [SerializeField] private int Ammo = 10; //arbitrary starting numbers, playtest
-    [SerializeField] private int NumAmmo = 10; //arbitrary starting numbers, playtest
+    [SerializeField] public int Health = 10; //arbitrary starting numbers, playtest
+   // [SerializeField] private int NumAmmo = 10; //arbitrary starting numbers, playtest
     void Awake ()
     {
         if (Instance != null && Instance != this)
@@ -43,10 +43,10 @@ public class VrPlayer : MonoBehaviour {
     void OnCollisionEnter(Collision other)
     {
 
-        if (other.collider.tag == "Land")
-        {
-            Rb.mass = 2;
-        }
+        //if (other.collider.tag == "Land")
+        //{
+        //    Rb.mass = 2;
+        //}
         if (other.collider.tag == "Land")
         {
             gravMultiplier = highGrav;
@@ -65,38 +65,16 @@ public class VrPlayer : MonoBehaviour {
             gravMultiplier = lowGrav;
         }
     }
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Enemy")
-        {
-            Debug.Log("Enemy hit you!");
-            --Health;
 
-            if (Health <= 0)
-            {
-                Manager.Instance.SetUpdatable(false);
-            }
-        }
-
-        if (other.tag == "Ammo")
-        {
-            Debug.Log("VR picked up ammo");
-            Ammo += NumAmmo;
-        }
-       
-    }
     // Use this for initialization
-	void OnTriggerExit(Collider other)
-    {
-        
-    }
+
 	// Update is called once per frame
 	void Update ()
     {
         if (Manager.Instance.IsUpdatable())
         {
             AttackDelay += Time.deltaTime;
+            Rb.AddForce(Physics.gravity*gravMultiplier,ForceMode.Force);
         }
-        Rb.AddForce(Physics.gravity*gravMultiplier,ForceMode.Force);
     }
 }

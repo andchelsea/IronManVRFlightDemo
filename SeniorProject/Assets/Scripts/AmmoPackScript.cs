@@ -5,6 +5,7 @@ public class AmmoPackScript : MonoBehaviour {
 
     [SerializeField] private Shader unlit;//make a shader
     [SerializeField] private Shader lit;//make a shader
+    [SerializeField] private int numAmmo;
 
     // Use this for initialization
     void Start ()
@@ -32,8 +33,9 @@ public class AmmoPackScript : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
-            Debug.Log("Player picked you up");
-            this.GetComponent<GameObject>().SetActive(false);
+            //Debug.Log("Player picked you up");
+            VrPlayer.Instance.Ammo += numAmmo;
+            this.gameObject.SetActive(false);
         }
     }
 }

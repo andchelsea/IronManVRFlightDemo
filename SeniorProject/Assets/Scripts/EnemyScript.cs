@@ -10,7 +10,7 @@ public class EnemyScript : MonoBehaviour
     Transform PlayerPos;
     Rigidbody rb;
     // Use this for initialization
-    void Start ()
+    void Awake ()
     {
        // GetComponent<Material>().shader = unlit;
         Lifetime = life;
@@ -48,36 +48,24 @@ public class EnemyScript : MonoBehaviour
     {
         //GetComponent<Material>().shader = unlit;
     }
-
-
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.collider.tag == "Player")
-        {
-            Debug.Log("Enemy hit VR Player!");
-            //Destroy(this.gameObject);
-            this.gameObject.SetActive(false);//will this work??
-        }
-        else if (other.collider.tag == "Bullet")
-        {
-            Debug.Log("Enemy hit a Bullet!");
-            this.gameObject.SetActive(false);//will this work??
-        }
-    }
-
     
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("Enemy hit VR Player!");
-            //Destroy(this.gameObject);
-            this.gameObject.SetActive(false);//will this work??
+            this.gameObject.SetActive(false);
+     
+
+            if (--VrPlayer.Instance.Health <= 0)
+            {
+                Manager.Instance.SetUpdatable(false);
+            }
         }
+    
         else if(other.gameObject.tag == "Bullet")
         {
-            Debug.Log("Enemy hit a Bullet!");
-            this.gameObject.SetActive(false);//will this work??
+            this.gameObject.SetActive(false);
+            other.gameObject.SetActive(false);
         }
     }
      
