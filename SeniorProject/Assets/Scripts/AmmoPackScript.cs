@@ -35,6 +35,7 @@ public class AmmoPackScript : MonoBehaviour {
         {
             //Debug.Log("Player picked you up");
             VrPlayer.Instance.Ammo += numAmmo;
+            AmmoManager.Instance.AmmoUpdate();
             this.gameObject.SetActive(false);
         }
     }
