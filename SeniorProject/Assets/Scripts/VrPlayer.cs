@@ -26,14 +26,7 @@ public class VrPlayer : MonoBehaviour {
         gravMultiplier = highGrav;
     }
 
-    void OnCollisionExit(Collision other)
-    {
 
-        if (other.collider.tag == "Land")
-        {
-            Rb.mass = 0.5f;
-        }
-    }
     public int GetHealth() { return Health; }
     public bool Shootable()
     {
@@ -54,7 +47,23 @@ public class VrPlayer : MonoBehaviour {
         {
             Rb.mass = 2;
         }
+        if (other.collider.tag == "Land")
+        {
+            gravMultiplier = highGrav;
+        }
         //may need to be on the hands (and body?) for ammo
+    }
+    void OnCollisionExit(Collision other)
+    {
+
+       // if (other.collider.tag == "Land")
+       // {
+       //     Rb.mass = 0.5f;
+       // }
+        if (other.collider.tag == "Land")
+        {
+            gravMultiplier = lowGrav;
+        }
     }
     void OnTriggerEnter(Collider other)
     {
@@ -74,18 +83,12 @@ public class VrPlayer : MonoBehaviour {
             Debug.Log("VR picked up ammo");
             Ammo += NumAmmo;
         }
-        if(other.tag=="Land")
-        {
-            gravMultiplier = highGrav;
-        }
+       
     }
     // Use this for initialization
 	void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Land")
-        {
-            gravMultiplier = lowGrav;
-        }
+        
     }
 	// Update is called once per frame
 	void Update ()
