@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
     {
         Lifetime = Life;
         this.gameObject.SetActive(true);
+        this.GetComponent<Rigidbody>().velocity = Vector3.zero; 
     }
 
 	// Update is called once per frame

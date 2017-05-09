@@ -19,8 +19,8 @@ public class Manager : MonoBehaviour {
 
     private bool updatable = true;
 
-
     int nextAvaliableBullet = 0;
+
 	// Use this for initialization
 	private void Awake ()
     {
@@ -90,11 +90,12 @@ public class Manager : MonoBehaviour {
     {
         for (int i = 0; i < EnemyNum; ++i)
         {
-            if (!EnemyPool[i].activeInHierarchy)
+            if (!EnemyPool[i].activeSelf)
             {
                 return EnemyPool[i];
             }
         }
+
         Debug.Log("Not Enough Enemies");
         return null;
     }
@@ -102,7 +103,7 @@ public class Manager : MonoBehaviour {
     public GameObject GetBullet()
     {
         //TEST THIS ITS NEW 
-        nextAvaliableBullet++;
+        ++nextAvaliableBullet;
         nextAvaliableBullet %= BulletNum;
 
         return BulletPool [nextAvaliableBullet];
@@ -121,7 +122,7 @@ public class Manager : MonoBehaviour {
     {
         for (int i = 0; i < AmmoNum; ++i)
         {
-            if (!AmmoPackPool[i].activeInHierarchy) //active in hierarchy could be wrong call. use active self instead. Use a current place to speed up check
+            if (!AmmoPackPool[i].activeSelf) //active in hierarchy could be wrong call. use active self instead. Use a current place to speed up check
             {
                 return AmmoPackPool[i];
             }
