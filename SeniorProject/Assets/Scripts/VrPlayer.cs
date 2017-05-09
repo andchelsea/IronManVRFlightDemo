@@ -14,7 +14,7 @@ public class VrPlayer : MonoBehaviour {
     [SerializeField] public int Ammo = 10; //arbitrary starting numbers, playtest
     public float gravMultiplier= 1.0f;
     //privates
-    private float AttackDelay = 0;
+    //private float AttackDelay = 0;
     [SerializeField] private float AttackCoolDown = 0.5f; //arbitrary starting numbers, playtest
     [SerializeField] public int Health = 10; //arbitrary starting numbers, playtest
    // [SerializeField] private int NumAmmo = 10; //arbitrary starting numbers, playtest
@@ -28,12 +28,11 @@ public class VrPlayer : MonoBehaviour {
 
 
     public int GetHealth() { return Health; }
-    public bool Shootable()
+    public bool Shootable(float AttackDelay)
     {
         if (Ammo > 0 && AttackDelay > AttackCoolDown && Manager.Instance.IsUpdatable())
         {
             --Ammo;
-            AttackDelay = 0;
             return true;
         }
         else
@@ -73,7 +72,7 @@ public class VrPlayer : MonoBehaviour {
     {
         if (Manager.Instance.IsUpdatable())
         {
-            AttackDelay += Time.deltaTime;
+            //AttackDelay += Time.deltaTime;
             Rb.AddForce(Physics.gravity*gravMultiplier,ForceMode.Force);
         }
     }
