@@ -22,6 +22,7 @@ public class EnemyScript : MonoBehaviour
     {
         Lifetime = life;
         this.gameObject.SetActive(true);
+        rb.velocity = Vector3.zero;
     }
 
 	// Update is called once per frame
@@ -35,7 +36,6 @@ public class EnemyScript : MonoBehaviour
 
             transform.LookAt(PlayerPos);
             rb.velocity = rb.velocity.magnitude * transform.forward;
-            
         }
     }
 

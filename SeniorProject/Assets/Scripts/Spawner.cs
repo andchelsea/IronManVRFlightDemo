@@ -72,6 +72,7 @@ public class Spawner : MonoBehaviour {
                     Debug.Log("NOT ENOUGH ENEMIES");
             }
 
+                //make an int that keeps track of how many ammo packs are active to avoid a unnessesary for loop
             if (AmmoDelay > AmmoSpawnCoolDown)
             {
                 GameObject e = Manager.Instance.GetAmmoPack();
@@ -79,7 +80,8 @@ public class Spawner : MonoBehaviour {
                 {
                     AmmoDelay = 0;
 
-                    e.transform.position = SpawnablePos();//this might wanna make an empty object infront of controller or with an offset
+                    e.transform.position = SpawnablePos();
+                    e.SetActive(true);
                 }
                 else
                     Debug.Log("NOT ENOUGH AMMO PACKS");
