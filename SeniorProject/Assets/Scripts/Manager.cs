@@ -59,31 +59,34 @@ public class Manager : MonoBehaviour {
 
     public void TogglePause()
     {
-        paused = !paused;
-        if (paused)
+        if(VrPlayer.Instance.GetHealth()>0)
         {
+            paused = !paused;
 
-            GetComponentInChildren<Canvas>().enabled = true;
-            VRPause.enabled = true;
-            Time.timeScale = 0;
-            Cursor.lockState = CursorLockMode.None; 
-            //hide crosshair
-            Cursor.visible = true;
+            if (paused)
+            {
 
-            updatable = false;
+                GetComponentInChildren<Canvas>().enabled = true;
+                VRPause.enabled = true;
+                Time.timeScale = 0;
+                Cursor.lockState = CursorLockMode.None; 
+                //hide crosshair
+                Cursor.visible = true;
+
+                updatable = false;
+            }
+            else
+            {
+                GetComponentInChildren<Canvas>().enabled = false;
+                VRPause.enabled = false;
+                Time.timeScale = 1;
+                Cursor.lockState = CursorLockMode.Locked; 
+                //unhide crosshair
+                 Cursor.visible = false;
+
+                updatable = true;
+            }
         }
-        else
-        {
-            GetComponentInChildren<Canvas>().enabled = false;
-            VRPause.enabled = false;
-            Time.timeScale = 1;
-            Cursor.lockState = CursorLockMode.Locked; 
-            //unhide crosshair
-             Cursor.visible = false;
-
-            updatable = true;
-        }
-
     }
 
     public GameObject GetEnemy()

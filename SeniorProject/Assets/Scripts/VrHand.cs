@@ -45,7 +45,6 @@ public class VrHand : MonoBehaviour
 
     void Pause(object sender, ClickedEventArgs e)
     {
-        Debug.Log("FOUND");
         Manager.Instance.TogglePause();
     }
 

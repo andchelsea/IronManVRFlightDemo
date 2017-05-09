@@ -33,20 +33,5 @@ public class Bullet : MonoBehaviour
                  }
         }
     }
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.collider.tag == "Enemy")
-        {
-            Debug.Log("Bullet hit an Enemy!");
-            this.gameObject.SetActive(false);
-        }
-    }
-    void OnCollisionTrigger(Collider other)
-    {
-        if (other.tag == "Enemy")
-        {
-            Debug.Log("Bullet hit an Enemy!");
-            this.gameObject.SetActive(false);
-        }
-    }
+
 }
