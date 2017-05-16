@@ -24,7 +24,7 @@ public class HealthManager : MonoBehaviour {
             
         }
 
-    void Damaged()
+    public void Damaged()
     {
         health.text = VrPlayer.Instance.GetHealth().ToString();
     }

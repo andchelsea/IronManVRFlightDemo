@@ -21,7 +21,10 @@ public class VrPlayer : MonoBehaviour {
     void Awake ()
     {
         if (Instance != null && Instance != this)
+        {
             Destroy(this.gameObject);
+            return;
+        }
         Instance = this;
         gravMultiplier = highGrav;
     }
@@ -33,6 +36,7 @@ public class VrPlayer : MonoBehaviour {
         if (Ammo > 0 && AttackDelay > AttackCoolDown && Manager.Instance.IsUpdatable())
         {
             --Ammo;
+            AmmoManager.Instance.AmmoUpdate();
             return true;
         }
         else
