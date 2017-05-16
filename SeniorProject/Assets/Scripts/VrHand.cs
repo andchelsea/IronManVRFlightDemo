@@ -9,6 +9,10 @@ public class VrHand : MonoBehaviour
     private float MaxSpeed;
     private Rigidbody Rb;
     private float AttackDelay;
+     AudioSource fireSound;
+    //could add low hum for flight sound?
+
+    ParticleSystem PS;
 
     // Use this for initialization
     private void Start()
@@ -20,6 +24,8 @@ public class VrHand : MonoBehaviour
         FlySpeed = VrPlayer.Instance.FlySpeed;
         MaxSpeed = VrPlayer.Instance.MaxSpeed;
         Rb = VrPlayer.Instance.Rb;
+        fireSound = GetComponent<AudioSource>();
+        PS = GetComponent<ParticleSystem>();
     }
     
     void Attack(object sender, ClickedEventArgs e)
@@ -39,6 +45,7 @@ public class VrHand : MonoBehaviour
                 g.transform.rotation = this.transform.rotation;//   new Quaternion(this.transform.rotation.x, this.transform.rotation.y, this.transform.rotation.z, this.transform.rotation.w);
 
                 g.GetComponent<Rigidbody>().AddForce(new Vector3(this.transform.forward.x, this.transform.forward.y, this.transform.forward.z) * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!
+                fireSound.Play();
             }
             else
                 Debug.Log("NOT ENOUGH BULLETS");
@@ -56,7 +63,7 @@ public class VrHand : MonoBehaviour
         if (Rb.velocity.magnitude < MaxSpeed)
             Rb.AddForce(-Controller.transform.forward * FlySpeed);// * triggerpress);//needs drag force
         SteamVR_Controller.Input((int)Controller.controllerIndex).TriggerHapticPulse();
-   
+        PS.Play();
     }
 
 
