@@ -23,6 +23,16 @@ public class FlareScript : MonoBehaviour {
 	void Update () {
         if (Manager.Instance.IsUpdatable())
         {
+            Collider[] collisions = Physics.OverlapSphere(this.transform.position, 1);
+
+            foreach (var collision in collisions)
+            {
+                if(collision.tag == "Enemy")
+                {
+
+                }
+            }
+
             timer += Time.deltaTime;
             if (timer > FlareDeactivate)
             {

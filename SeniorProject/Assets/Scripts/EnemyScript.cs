@@ -39,16 +39,21 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    void OnMouseExit()
+    {
+        //GetComponent<Material>().shader = unlit;
+    }
+
     void OnMouseEnter()
     {
         //GetComponent<Material>().shader = lit;//testing required
     }
 
-    void OnMouseExit()
+    void OnParticleCollision(GameObject other)
     {
-        //GetComponent<Material>().shader = unlit;
+        Debug.Log("Particle Collision!");
     }
-    
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -69,5 +74,9 @@ public class EnemyScript : MonoBehaviour
         }
     }
      
+    void OnFlareDetection()
+    {
+        //this.GetComponentInChildren
+    }
 
 }
