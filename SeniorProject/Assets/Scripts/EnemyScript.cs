@@ -9,6 +9,8 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private Shader lit;//make a shader
     Transform PlayerPos;
     Rigidbody rb;
+    AudioSource DeathSound;
+    ParticleSystem PS;
     // Use this for initialization
     void Awake ()
     {
@@ -16,6 +18,9 @@ public class EnemyScript : MonoBehaviour
         Lifetime = life;
         PlayerPos = VrPlayer.Instance.gameObject.transform;
         rb = GetComponent<Rigidbody>();
+        DeathSound = GetComponent<AudioSource>();
+
+        PS = GetComponent<ParticleSystem>();
     }
 
 	public void Reset()
@@ -39,14 +44,14 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    void OnMouseExit()
+    void OnMouseExit()//doesnt work
     {
-        //GetComponent<Material>().shader = unlit;
+        GetComponent<Material>().shader = unlit;
     }
 
-    void OnMouseEnter()
+    void OnMouseEnter()//doesnt work
     {
-        //GetComponent<Material>().shader = lit;//testing required
+        GetComponent<Material>().shader = lit;//testing required
     }
 
     void OnParticleCollision(GameObject other)
@@ -69,8 +74,10 @@ public class EnemyScript : MonoBehaviour
     
         else if(other.gameObject.tag == "Bullet")
         {
-            this.gameObject.SetActive(false);
+            DeathSound.Play();
+            PS.Play();
             other.gameObject.SetActive(false);
+            this.gameObject.SetActive(false);
         }
     }
      

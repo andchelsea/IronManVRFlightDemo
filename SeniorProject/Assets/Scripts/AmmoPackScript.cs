@@ -6,11 +6,11 @@ public class AmmoPackScript : MonoBehaviour {
     [SerializeField] private Shader unlit;//make a shader
     [SerializeField] private Shader lit;//make a shader
     [SerializeField] private int numAmmo;
-
+    AudioSource PickupSound;
     // Use this for initialization
     void Start ()
     {
-	
+        PickupSound = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -36,6 +36,7 @@ public class AmmoPackScript : MonoBehaviour {
             //Debug.Log("Player picked you up");
             VrPlayer.Instance.Ammo += numAmmo;
             AmmoManager.Instance.AmmoUpdate();
+            PickupSound.Play();
             this.gameObject.SetActive(false);
         }
     }
