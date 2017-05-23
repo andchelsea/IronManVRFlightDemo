@@ -82,13 +82,17 @@ public class Manager : MonoBehaviour {
                 Time.timeScale = 1;
                 Cursor.lockState = CursorLockMode.Locked; 
                 //unhide crosshair
-                 Cursor.visible = false;
+                Cursor.visible = false;
 
                 updatable = true;
             }
         }
     }
 
+    public void ResetGame()
+    {
+
+    }
     public GameObject GetEnemy()
     {
         for (int i = 0; i < EnemyNum; ++i)
@@ -133,9 +137,4 @@ public class Manager : MonoBehaviour {
         return null;
     }
 
-    // Update is called once per frame
-    void Update ()
-    {
-	
-	}
 }
