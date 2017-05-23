@@ -6,15 +6,20 @@ public class VrPlayer : MonoBehaviour {
     public static VrPlayer Instance;
 
     [SerializeField] public Rigidbody Rb;//probably head/torso, needed to apply velocity
+
+    [Space(10)]
     [SerializeField] public float FlySpeed = 15; //arbitrary starting numbers, playtest
     [SerializeField] public float MaxSpeed = 150; //arbitrary starting numbers, playtest
     [SerializeField] public float ProjectileSpeed = 15; //arbitrary starting numbers, playtest
+    [SerializeField] public float AngleOffset = 90;
+
+    [Space(10)]
     [SerializeField] public float lowGrav = 0.5f;
     [SerializeField] public float highGrav= 1.0f;
+    private float gravMultiplier= 1.0f;
+
+    [Space(10)]
     [SerializeField] public int Ammo = 10; //arbitrary starting numbers, playtest
-    public float gravMultiplier= 1.0f;
-    //privates
-    //private float AttackDelay = 0;
     [SerializeField] private float AttackCoolDown = 0.5f; //arbitrary starting numbers, playtest
     [SerializeField] public int Health = 10; //arbitrary starting numbers, playtest
    // [SerializeField] private int NumAmmo = 10; //arbitrary starting numbers, playtest
@@ -31,6 +36,7 @@ public class VrPlayer : MonoBehaviour {
 
 
     public int GetHealth() { return Health; }
+
     public bool Shootable(float AttackDelay)
     {
         if (Ammo > 0 && AttackDelay > AttackCoolDown && Manager.Instance.IsUpdatable())
@@ -77,7 +83,7 @@ public class VrPlayer : MonoBehaviour {
         if (Manager.Instance.IsUpdatable())
         {
             //AttackDelay += Time.deltaTime;
-            Rb.AddForce(Physics.gravity*gravMultiplier,ForceMode.Force);
+            Rb.AddForce(Physics.gravity*gravMultiplier, ForceMode.Force);
         }
     }
 }

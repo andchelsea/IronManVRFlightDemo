@@ -16,6 +16,7 @@ public class PcPlayer : MonoBehaviour
     [SerializeField] private float MinPitchAngle = -120.0f;
 
     [SerializeField] private float MaxRayDist = 120.0f;
+    [SerializeField] private Shader lit;//make a shader
 
     [SerializeField] private GameObject pFlare1;//make a prefab
     [SerializeField] private GameObject pFlare2;//make a prefab
@@ -52,14 +53,14 @@ public class PcPlayer : MonoBehaviour
             Vector3 newVel = new Vector3(0,0,0);
 
             //Movement Inputs
-            Rb.velocity = new Vector3(0.0f,0.0f,0.0f);
+            //Rb.velocity = new Vector3(0.0f,0.0f,0.0f);
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
             //testing purposes
             newVel += transform.forward * Speed * vertical;
             newVel += transform.right * Speed * 0.75f * horizontal;
-            Rb.AddForce(newVel);
+            Rb.velocity = newVel;
 
             Yaw += YawSpeed * Input.GetAxis("Mouse X");
 
@@ -81,6 +82,7 @@ public class PcPlayer : MonoBehaviour
 
                     if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")
                     {
+                       //info.collider.gameObject.GetComponent<Renderer>().material.shader = lit;
                        // info.collider.gameObject.GetComponent<Material>().shader = lit;
                        if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
                         {
