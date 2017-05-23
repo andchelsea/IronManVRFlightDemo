@@ -5,12 +5,10 @@ public class EnemyScript : MonoBehaviour
 {
     private float Lifetime = 3;//needed?
     private float ChildLife = 0;
-    [SerializeField]
     private GameObject child;
     [SerializeField] private float hologramLife = 2;
     [SerializeField] private float life = 0;
     [SerializeField] private Shader unlit;//make a shader
-    [SerializeField] private Shader lit;//make a shader
     Transform PlayerPos;
     Rigidbody rb;
     AudioSource DeathSound;
@@ -27,6 +25,7 @@ public class EnemyScript : MonoBehaviour
         PS = GetComponent<ParticleSystem>();
         child = this.gameObject.transform.GetChild(0).gameObject;//enemy structure dependednt
         child.SetActive(false);
+
     }
 
 	public void Reset()
@@ -66,12 +65,9 @@ public class EnemyScript : MonoBehaviour
     void OnMouseExit()//doesnt work
     {
         GetComponent<Material>().shader = unlit;
+        Debug.Log("So so so wrong");
     }
 
-    void OnMouseEnter()//doesnt work
-    {
-        GetComponent<Material>().shader = lit;//testing required
-    }
 
     void OnParticleCollision(GameObject other)
     {
