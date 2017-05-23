@@ -79,8 +79,9 @@ public class EnemyScript : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             child.SetActive(false);
+            PS.Play();
             this.gameObject.SetActive(false);
-
+            HealthManager.Instance.Damaged();
             if (--VrPlayer.Instance.Health <= 0)
             {
                 Manager.Instance.SetUpdatable(false);
@@ -90,6 +91,7 @@ public class EnemyScript : MonoBehaviour
         {
             DeathSound.Play();
             PS.Play();
+            //PS.Emit(50);
             child.SetActive(false);
             other.gameObject.SetActive(false);
             this.gameObject.SetActive(false);

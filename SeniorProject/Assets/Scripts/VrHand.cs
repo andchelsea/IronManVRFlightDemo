@@ -27,6 +27,7 @@ public class VrHand : MonoBehaviour
         Rb = VrPlayer.Instance.Rb;
         fireSound = GetComponent<AudioSource>();
         PS = GetComponent<ParticleSystem>();
+       
         AngleOffset = VrPlayer.Instance.AngleOffset;
     }
     
@@ -64,9 +65,14 @@ public class VrHand : MonoBehaviour
     {
         //float triggerpress = SteamVR_Controller.Input((int)Controller.controllerIndex).hairTriggerDelta;
         if (Rb.velocity.magnitude < MaxSpeed)
-            Rb.AddForce(-Controller.transform.forward * FlySpeed);// * triggerpress);//needs drag force
+        {
+            Vector3 dir = Quaternion.AngleAxis(AngleOffset, Controller.transform.forward) * transform.right;
+            Rb.AddForce(-dir * FlySpeed);// * triggerpress);//needs drag force
+        }
         SteamVR_Controller.Input((int)Controller.controllerIndex).TriggerHapticPulse();
-        PS.Play();
+        //PS.Play();
+        
+        PS.Emit(1);
     }
 
 
