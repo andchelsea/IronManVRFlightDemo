@@ -20,9 +20,10 @@ public class Manager : MonoBehaviour {
     private bool updatable = true;
 
     int nextAvaliableBullet = 0;
+    int nextAvaliableEnemy = 0;
 
-	// Use this for initialization
-	private void Awake ()
+    // Use this for initialization
+    private void Awake ()
     {
         if (Instance != null && Instance != this)
             Destroy(this.gameObject);
@@ -36,7 +37,7 @@ public class Manager : MonoBehaviour {
         for(int i =0; i<EnemyNum; ++i)
         {
             EnemyPool[i] =  Instantiate(pEnemy, this.transform.position, this.transform.rotation) as GameObject;
-            EnemyPool[i].SetActive(false);
+            EnemyPool[i].GetComponent<EnemyScript>().Die(false);
         }
 
         BulletPool = new GameObject[BulletNum];
@@ -91,11 +92,31 @@ public class Manager : MonoBehaviour {
 
     public void ResetGame()
     {
+        foreach( GameObject e in EnemyPool)
+        {
+            e.GetComponent<EnemyScript>().Die(false);
+        }
+        foreach (GameObject B in BulletPool)
+        {
+            B.SetActive(false);
+        }
+        foreach (GameObject A in AmmoPackPool)
+        {
+            A.SetActive(false);
+        }
+        VrPlayer.Instance.Reset();
+        PcPlayer.Instance.transform.position.Set(0, 1, -1.78f);
 
     }
     public GameObject GetEnemy()
     {
-        for (int i = 0; i < EnemyNum; ++i)
+        //TEST THIS ITS NEW 
+        ++nextAvaliableEnemy;
+        nextAvaliableEnemy %= EnemyNum;
+
+        return EnemyPool[nextAvaliableEnemy];
+
+       /* for (int i = 0; i < EnemyNum; ++i)
         {
             if (!EnemyPool[i].activeSelf)
             {
@@ -104,7 +125,7 @@ public class Manager : MonoBehaviour {
         }
 
         Debug.Log("Not Enough Enemies");
-        return null;
+        return null;*/
     }
 
     public GameObject GetBullet()

@@ -22,6 +22,9 @@ public class VrPlayer : MonoBehaviour {
     [SerializeField] public int Ammo = 10; //arbitrary starting numbers, playtest
     [SerializeField] private float AttackCoolDown = 0.5f; //arbitrary starting numbers, playtest
     [SerializeField] public int Health = 10; //arbitrary starting numbers, playtest
+
+    private int startHealth;
+    private int startAmmo;
    // [SerializeField] private int NumAmmo = 10; //arbitrary starting numbers, playtest
     void Awake ()
     {
@@ -32,9 +35,16 @@ public class VrPlayer : MonoBehaviour {
         }
         Instance = this;
         gravMultiplier = highGrav;
+        startHealth = Health;
+        startAmmo = Ammo;
     }
 
-
+   public void Reset()
+    {
+        this.transform.position.Set(0, 0.6f, -5);
+        Health = startHealth;
+        Ammo = startAmmo;
+    }
     public int GetHealth() { return Health; }
 
     public bool Shootable(float AttackDelay)
@@ -51,11 +61,6 @@ public class VrPlayer : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-
-        //if (other.collider.tag == "Land")
-        //{
-        //    Rb.mass = 2;
-        //}
         if (other.collider.tag == "Land")
         {
             gravMultiplier = highGrav;
@@ -64,11 +69,6 @@ public class VrPlayer : MonoBehaviour {
     }
     void OnCollisionExit(Collision other)
     {
-
-       // if (other.collider.tag == "Land")
-       // {
-       //     Rb.mass = 0.5f;
-       // }
         if (other.collider.tag == "Land")
         {
             gravMultiplier = lowGrav;

@@ -9,10 +9,18 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private float hologramLife = 2;
     [SerializeField] private float life = 0;
     [SerializeField] private Shader unlit;//make a shader
-    Transform PlayerPos;
-    Rigidbody rb;
-    AudioSource DeathSound;
-    ParticleSystem PS;
+    private Transform PlayerPos;
+    private Rigidbody rb;
+    private AudioSource DeathSound;
+    private ParticleSystem PS;
+    private ParticleSystem ChildPS;
+
+
+    //
+    private Renderer pRender;
+    private Renderer cRender;
+    private SphereCollider sCollider;
+    
     // Use this for initialization
     void Awake ()
     {
@@ -22,10 +30,14 @@ public class EnemyScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         DeathSound = GetComponent<AudioSource>();
 
-        PS = GetComponent<ParticleSystem>();
         child = this.gameObject.transform.GetChild(0).gameObject;//enemy structure dependednt
-        child.SetActive(false);
+        PS = GetComponent<ParticleSystem>();
+        ChildPS = child.GetComponent<ParticleSystem>();
 
+        pRender = this.gameObject.GetComponent<Renderer>();
+        cRender = child.gameObject.GetComponent<Renderer>();
+        cRender.enabled= false;
+        sCollider = this.gameObject.GetComponent<SphereCollider>();
     }
 
 	public void Reset()
@@ -33,6 +45,24 @@ public class EnemyScript : MonoBehaviour
         Lifetime = life;
         this.gameObject.SetActive(true);
         rb.velocity = Vector3.zero;
+
+        pRender.enabled = true;
+        cRender.enabled = false;
+        sCollider.enabled = true;
+    }
+
+    public void Die(bool explode = true)
+    {
+        cRender.enabled = false;
+        pRender.enabled = false;
+        sCollider.enabled = false;
+        rb.velocity = Vector3.zero;
+        if(explode)
+        {
+            PS.Play();
+            ChildPS.Play();
+            DeathSound.Play();
+        }
     }
 
 	// Update is called once per frame
@@ -45,7 +75,7 @@ public class EnemyScript : MonoBehaviour
                 ChildLife -= Time.deltaTime;
                 if (ChildLife < 0.0f)
                 {
-                   child.SetActive(false);//capture the child in awake
+                  cRender.enabled=false;//capture the child in awake
                 }
             }
 
@@ -53,8 +83,7 @@ public class EnemyScript : MonoBehaviour
             Lifetime -= Time.deltaTime;
             if (Lifetime < 0.0f)
             {
-                child.SetActive(false);
-                this.gameObject.SetActive(false);
+                Die(false);
             }
 
             transform.LookAt(PlayerPos);
@@ -69,18 +98,11 @@ public class EnemyScript : MonoBehaviour
     }
 
 
-    void OnParticleCollision(GameObject other)
-    {
-        Debug.Log("Particle Collision!");
-    }
-
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
-            child.SetActive(false);
-            PS.Play();
-            this.gameObject.SetActive(false);
+            Die();
             HealthManager.Instance.Damaged();
             if (--VrPlayer.Instance.Health <= 0)
             {
@@ -89,16 +111,11 @@ public class EnemyScript : MonoBehaviour
         }
         else if(other.gameObject.tag == "Bullet")
         {
-            DeathSound.Play();
-            PS.Play();
-            //PS.Emit(50);
-            child.SetActive(false);
-            other.gameObject.SetActive(false);
-            this.gameObject.SetActive(false);
+            Die();
         }
         else if(other.gameObject.tag == "Flare")
         {
-            child.SetActive(true);
+            cRender.enabled=true;
             ChildLife = hologramLife;
             Debug.Log("Enemy hit a Flare!");
         }
