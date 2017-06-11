@@ -7,6 +7,7 @@ public class PcPlayer : MonoBehaviour
     public static PcPlayer Instance;
     private Rigidbody Rb;
 
+    //Movement Variables
     private float Pitch = 0.0f;
     private float Yaw = 0.0f;
     [SerializeField] private float PitchSpeed = 2.0f;
@@ -15,16 +16,15 @@ public class PcPlayer : MonoBehaviour
     [SerializeField] private float MaxPitchAngle = 120.0f;
     [SerializeField] private float MinPitchAngle = -120.0f;
 
-    [SerializeField] private float MaxRayDist = 120.0f;
-    [SerializeField] private Shader lit;//make a shader
-
+    //Flare Variables
+    [SerializeField] private float MaxRayDist = 120.0f;//How far the ray should check (for flare creation)
     [SerializeField] private GameObject pFlare1;//make a prefab
     [SerializeField] private GameObject pFlare2;//make a prefab
     [SerializeField] private float FlareCoolDown = 1.0f;
     private float Flare1Delay = 0.0f;
     private float Flare2Delay = 0.0f;
 
-    // Use this for initialization
+    //Basic Singleton
     private void Start ()
     {
         if (Instance != null && Instance != this)
@@ -32,59 +32,51 @@ public class PcPlayer : MonoBehaviour
         Instance = this;
 
         Rb = GetComponent<Rigidbody>();
-        Cursor.lockState = CursorLockMode.Locked; //add crosshair
+        Cursor.lockState = CursorLockMode.Locked; //aiming crosshairs
         Cursor.visible = false;
-        //pFlare1 = = Instantiate(pFlare1, this.transform.position, this.transform.rotation) as GameObject;
 
-        pFlare1 = Instantiate(pFlare1, this.transform.position, this.transform.rotation) as GameObject;// as GameObject;
+        //Create Flare 1 & 2, Design Idea: have flare 3 & 4 as well
+        pFlare1 = Instantiate(pFlare1, this.transform.position, this.transform.rotation) as GameObject;
         pFlare1.SetActive(false);
 
         pFlare2 = Instantiate(pFlare2);
-        pFlare2.SetActive(false);//needs to be instatiated??
+        pFlare2.SetActive(false);
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
-        if(Manager.Instance.IsUpdatable())
+        if(Manager.Instance.IsUpdatable())//Only update if VR player is alive or game is not paused
         {
+            //Flare Lifetime
             Flare1Delay += Time.deltaTime;
             Flare2Delay += Time.deltaTime;
-            Vector3 newVel = new Vector3(0,0,0);
 
             //Movement Inputs
-            //Rb.velocity = new Vector3(0.0f,0.0f,0.0f);
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
-
-            //testing purposes
+            Vector3 newVel = new Vector3(0,0,0);
             newVel += transform.forward * Speed * vertical;
             newVel += transform.right * Speed * 0.75f * horizontal;
             Rb.velocity = newVel;
 
             Yaw += YawSpeed * Input.GetAxis("Mouse X");
-
             Pitch += (PitchSpeed * Input.GetAxis("Mouse Y"));
 
+            //Cap pitch to make sure you dont flip upside-down 
             Pitch = Pitch <= MinPitchAngle ? MinPitchAngle : Pitch;
-
             Pitch = Pitch >= MaxPitchAngle ? MaxPitchAngle : Pitch;
 
             transform.localEulerAngles = new Vector3(Pitch, Yaw, 0.0f);
 
-            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //Shoot out raycast for flares
             RaycastHit info = new RaycastHit();
-
             //Debug.Log(info.collider.tag.ToString());
 
-            if(Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out info, MaxRayDist))
+            if(Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out info, MaxRayDist))//cast form the middle of the screen
             {
-
-                    if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")
+                    if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")//if ray returns a valid target
                     {
-                       //info.collider.gameObject.GetComponent<Renderer>().material.shader = lit;
-                       // info.collider.gameObject.GetComponent<Material>().shader = lit;
-                       if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
+                       if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)//!!!!!!!refactor so that raycast only happens when the flare button is pressed!!!!!!!!
                         {
                             pFlare1.transform.position = info.point;
                             pFlare1.GetComponent<FlareScript>().Reset();//either make a flare script to auto deactivate over time or remove
@@ -100,10 +92,11 @@ public class PcPlayer : MonoBehaviour
             }
       }
     
-      if( Input.GetButtonDown("Submit"))
+        //Allows PC Player to pause game
+        if( Input.GetButtonDown("Submit"))
         {
             Manager.Instance.TogglePause();
-            //SceneManager.LoadScene("MainMenu",LoadSceneMode.Single);
+            //SceneManager.LoadScene("MainMenu",LoadSceneMode.Single);//Main Menu level unused
         }
     }
 }

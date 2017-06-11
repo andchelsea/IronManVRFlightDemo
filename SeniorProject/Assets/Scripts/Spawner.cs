@@ -5,19 +5,24 @@ public class Spawner : MonoBehaviour {
 
     public static Spawner Instance;
 
+    //How often the ammo packs spawn
     [SerializeField] private float AmmoSpawnCoolDown = 0.5f;
     private float AmmoDelay = 0;
 
+    //How often the enemies spawn
     [SerializeField] private float EnemySpawnCoolDown = 0.5f;
     private float EnemyDelay = 0.0f;
     [SerializeField] private float EnemyFlySpeed = 5.0f; //arbitrary starting numbers, playtest
 
-    [SerializeField] private float minPos = 10.0f;
-    [SerializeField] private float maxPos = 25.0f;
-    private Transform VRPlayer;
-    [SerializeField] private BoxCollider PlayArea;
+    //spawn area parameters
+    [SerializeField] private float minPos = 10.0f;//min distance from VR player
+    [SerializeField] private float maxPos = 25.0f;//max distance from VR player
+    [SerializeField] private BoxCollider PlayArea;//game map area
 
-    // Use this for initialization
+    //Variables
+    private Transform VRPlayer;
+
+    //Basic Singleton
     private void Start()
     {
         if (Instance != null && Instance != this)
@@ -28,6 +33,7 @@ public class Spawner : MonoBehaviour {
         VRPlayer = VrPlayer.Instance.gameObject.transform;
     }
 
+    //Find a suitable spawnable position for ammo or enemy
     Vector3 SpawnablePos()
     {
         Vector3 pos = new Vector3(0, 0, 0); 
@@ -46,37 +52,28 @@ public class Spawner : MonoBehaviour {
         return pos;
     }
 
-	
-	// Update is called once per frame
 	void Update ()
     {
-        if(Manager.Instance.IsUpdatable())
+        if(Manager.Instance.IsUpdatable())//Only update if VR player is alive or game is not paused
         {
-            EnemyDelay += Time.deltaTime;
-            AmmoDelay += Time.deltaTime;
+            EnemyDelay += Time.deltaTime;//how often to spawn a enemy
+            AmmoDelay += Time.deltaTime;//how often to spawn ammo, !!!!!!repalce with coroutines!!!!!!!!!!!
 
             if (EnemyDelay > EnemySpawnCoolDown)
             {
-                GameObject e = Manager.Instance.GetEnemy();
+                GameObject e = Manager.Instance.GetEnemy();//find and spawn an enemy
 
-                if(e != null)
-                {
-                    EnemyDelay = 0;
-                    e.GetComponent<EnemyScript>().Reset();
-                    e.transform.position = SpawnablePos();
-                    //e.GetComponent<EnemyScript>().playerPosition = VrPlayer.Instance.transform.position;
-                    e.GetComponent<Rigidbody>().velocity = e.transform.forward * EnemyFlySpeed;//needs to be tested!!! (different force modes)
-                    //move the above to the enemy script???
-                }
-                else
-                    Debug.Log("NOT ENOUGH ENEMIES");
+                EnemyDelay = 0;
+                e.GetComponent<EnemyScript>().Reset();
+                e.transform.position = SpawnablePos();
+                e.GetComponent<Rigidbody>().velocity = e.transform.forward * EnemyFlySpeed;//kept in spawner to make the fly speed centeralized
             }
 
-                //make an int that keeps track of how many ammo packs are active to avoid a unnessesary for loop
+            //make an int that keeps track of how many ammo packs are active to avoid a unnessesary for loop
             if (AmmoDelay > AmmoSpawnCoolDown)
             {
                 GameObject e = Manager.Instance.GetAmmoPack();
-                if (e != null)
+                if (e != null)//Can return null
                 {
                     AmmoDelay = 0;
 
