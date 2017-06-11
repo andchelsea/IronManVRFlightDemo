@@ -5,34 +5,41 @@ public class Manager : MonoBehaviour {
 
     public static Manager Instance = null;
 
-    private bool paused = false;
+    //Pause menu management
     [SerializeField] Canvas VRPause;
-    [SerializeField] int BulletNum = 20;
-    [SerializeField] int EnemyNum = 50;
+    private bool paused = false;
+    private bool updatable = true;
+
+    //Ammo spawned from a prespawned pool
     [SerializeField] int AmmoNum = 10;
-    public GameObject[] EnemyPool;
-    [SerializeField] private GameObject pEnemy;
-    public GameObject[] BulletPool;
-    [SerializeField] private GameObject pBullet;
     public GameObject[] AmmoPackPool;
     [SerializeField] private GameObject pAmmo;
 
-    private bool updatable = true;
+    //Enemies spawned from a prespawned pool
+    [SerializeField] int EnemyNum = 50;
+    public GameObject[] EnemyPool;
+    [SerializeField] private GameObject pEnemy;
+    private int nextAvaliableEnemy = 0;//faster than looping through to find next unactive enemy
 
-    int nextAvaliableBullet = 0;
-    int nextAvaliableEnemy = 0;
+    //Bullets spawned from a prespawned pool
+    [SerializeField] int BulletNum = 20;
+    public GameObject[] BulletPool;
+    [SerializeField] private GameObject pBullet;
+    private int nextAvaliableBullet = 0;//faster than looping through to find next unactive bullet
 
-    // Use this for initialization
+
+
+    //Basic Singleton
     private void Awake ()
     {
         if (Instance != null && Instance != this)
             Destroy(this.gameObject);
-
         Instance = this;
 
         paused = false;
         updatable = true;
 
+        //spawn enemies
         EnemyPool = new GameObject[EnemyNum];
         for(int i =0; i<EnemyNum; ++i)
         {
@@ -40,6 +47,7 @@ public class Manager : MonoBehaviour {
             EnemyPool[i].GetComponent<EnemyScript>().Die(false);
         }
 
+        //spawn bullets
         BulletPool = new GameObject[BulletNum];
         for (int i = 0; i < BulletNum; ++i)
         {
@@ -47,6 +55,7 @@ public class Manager : MonoBehaviour {
             BulletPool[i].SetActive(false);
         }
 
+        //spawn ammo packs
         AmmoPackPool = new GameObject[AmmoNum];
         for (int i = 0; i < AmmoNum; ++i)
         {
@@ -55,35 +64,34 @@ public class Manager : MonoBehaviour {
         }
     }
 	
+    //Allows outsiders to set/get updatable
     public bool IsUpdatable() { return updatable; }
     public void SetUpdatable(bool update) { updatable = update; }
 
+    //Sets pause state
     public void TogglePause()
     {
-        if(VrPlayer.Instance.GetHealth()>0)
+        if(VrPlayer.Instance.GetHealth()>0)//If VR player is alive than pause
         {
             paused = !paused;
 
-            if (paused)
+            if (paused)//if now paused
             {
-
                 GetComponentInChildren<Canvas>().enabled = true;
-                VRPause.enabled = true;
-                Time.timeScale = 0;
-                Cursor.lockState = CursorLockMode.None; 
-                //hide crosshair
-                Cursor.visible = true;
+                VRPause.enabled = true;//show VR paused canvas
+                Time.timeScale = 0;//pause time, nessesary??
+                Cursor.lockState = CursorLockMode.None; //give the PC player their mouse back
+                Cursor.visible = true; //hide crosshair
 
                 updatable = false;
             }
             else
             {
                 GetComponentInChildren<Canvas>().enabled = false;
-                VRPause.enabled = false;
-                Time.timeScale = 1;
-                Cursor.lockState = CursorLockMode.Locked; 
-                //unhide crosshair
-                Cursor.visible = false;
+                VRPause.enabled = false;//hide VR paused canvas
+                Time.timeScale = 1;//unpause time
+                Cursor.lockState = CursorLockMode.Locked; //lock the PC mouse to center of the screen
+                Cursor.visible = false;//unhide crosshair
 
                 updatable = true;
             }
@@ -92,62 +100,46 @@ public class Manager : MonoBehaviour {
 
     public void ResetGame()
     {
+        //Kill off each enemy quietly
         foreach( GameObject e in EnemyPool)
         {
             e.GetComponent<EnemyScript>().Die(false);
         }
+        //set each bullet to be inactive
         foreach (GameObject B in BulletPool)
         {
             B.SetActive(false);
         }
+        //set each ammo pack to be inactive
         foreach (GameObject A in AmmoPackPool)
         {
             A.SetActive(false);
         }
-        VrPlayer.Instance.Reset();
-        PcPlayer.Instance.transform.position.Set(0, 1, -1.78f);
 
+        VrPlayer.Instance.Reset();//reset VR player
+        PcPlayer.Instance.transform.position.Set(0, 1, -1.78f);//Reset PC player pos
     }
     public GameObject GetEnemy()
     {
-        //TEST THIS ITS NEW 
+        //Has risk of taking enemy that is currently in use but, speed makes it a worthy trade off
         ++nextAvaliableEnemy;
         nextAvaliableEnemy %= EnemyNum;
 
         return EnemyPool[nextAvaliableEnemy];
-
-       /* for (int i = 0; i < EnemyNum; ++i)
-        {
-            if (!EnemyPool[i].activeSelf)
-            {
-                return EnemyPool[i];
-            }
-        }
-
-        Debug.Log("Not Enough Enemies");
-        return null;*/
     }
 
     public GameObject GetBullet()
     {
-        //TEST THIS ITS NEW 
+        //Has risk of taking bullet that is currently in use but, speed makes it a worthy trade off
         ++nextAvaliableBullet;
         nextAvaliableBullet %= BulletNum;
 
         return BulletPool [nextAvaliableBullet];
-
-        //for (int i = 0; i < BulletNum; ++i)
-        //{
-        //    if (!BulletPool[i].activeInHierarchy)
-        //    {
-        //        return BulletPool[i];
-        //    }
-        //}
-        //return null;
     }
 
     public GameObject GetAmmoPack()
     {
+        //Ammo pack is expected to be a low number ~5 so popping a ammo pack could be devistating
         for (int i = 0; i < AmmoNum; ++i)
         {
             if (!AmmoPackPool[i].activeSelf) //active in hierarchy could be wrong call. use active self instead. Use a current place to speed up check
@@ -155,6 +147,7 @@ public class Manager : MonoBehaviour {
                 return AmmoPackPool[i];
             }
         }
+        //Debug.Log("Potentially Not Enough Ammo Packs");
         return null;
     }
 
