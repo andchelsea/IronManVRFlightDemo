@@ -39,6 +39,7 @@ public class AmmoPackScript : MonoBehaviour {
             AmmoManager.Instance.AmmoUpdate();
             PickupSound.Play();
             this.gameObject.SetActive(false);
+            VrPlayer.Instance.AddScore(5);
         }
     }
 }

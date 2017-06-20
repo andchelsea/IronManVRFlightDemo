@@ -25,6 +25,6 @@ public class HealthManager : MonoBehaviour {
     //Called when VR player takes damage
     public void Damaged()
     {
-        health.text = VrPlayer.Instance.GetHealth().ToString();
+        health.text = (VrPlayer.Instance.GetHealth()-1).ToString();
     }
 }

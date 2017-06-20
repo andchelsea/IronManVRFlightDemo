@@ -59,13 +59,13 @@ public class PcPlayer : MonoBehaviour
             newVel += transform.right * Speed * 0.75f * horizontal;
             Rb.velocity = newVel;
 
+            //Rotation Inputs
             Yaw += YawSpeed * Input.GetAxis("Mouse X");
             Pitch += (PitchSpeed * Input.GetAxis("Mouse Y"));
 
             //Cap pitch to make sure you dont flip upside-down 
             Pitch = Pitch <= MinPitchAngle ? MinPitchAngle : Pitch;
             Pitch = Pitch >= MaxPitchAngle ? MaxPitchAngle : Pitch;
-
             transform.localEulerAngles = new Vector3(Pitch, Yaw, 0.0f);
 
             //Shoot out raycast for flares
@@ -97,6 +97,10 @@ public class PcPlayer : MonoBehaviour
         {
             Manager.Instance.TogglePause();
             //SceneManager.LoadScene("MainMenu",LoadSceneMode.Single);//Main Menu level unused
+        }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            Manager.Instance.StartGame();
         }
     }
 }

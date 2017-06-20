@@ -7,7 +7,8 @@ public class VrPlayer : MonoBehaviour {
 
     //Variables
     [SerializeField] public Rigidbody Rb;
-    [SerializeField] public float AngleOffset = 90;
+    [SerializeField] public float AngleOffset = 90;//used for flying and shooting
+    private int Score = 0;
 
     [Space(10)]
     //Flying Variables
@@ -46,12 +47,21 @@ public class VrPlayer : MonoBehaviour {
         startAmmo = Ammo;
     }
 
+    public void AddScore(int points)
+    {
+        Score += points;
+        ScoreManager.Instance.UpdateScore();
+    }
+    public int GetScore() { return Score; }
+
    //Reset Game 
    public void Reset()
     {
         this.transform.position.Set(0, 0.6f, -5);
         Health = startHealth;
         Ammo = startAmmo;
+        Score = 0;
+        ScoreManager.Instance.UpdateScore();
     }
 
     public int GetHealth() { return Health; }

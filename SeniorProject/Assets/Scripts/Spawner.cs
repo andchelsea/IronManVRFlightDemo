@@ -54,7 +54,7 @@ public class Spawner : MonoBehaviour {
 
 	void Update ()
     {
-        if(Manager.Instance.IsUpdatable())//Only update if VR player is alive or game is not paused
+        if(Manager.Instance.IsUpdatable() && Manager.Instance.IsGameStarted())//Only update if VR player is alive, game is not paused, and the PC player has started the game
         {
             EnemyDelay += Time.deltaTime;//how often to spawn a enemy
             AmmoDelay += Time.deltaTime;//how often to spawn ammo, !!!!!!repalce with coroutines!!!!!!!!!!!
