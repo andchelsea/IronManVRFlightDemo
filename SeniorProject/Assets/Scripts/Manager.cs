@@ -4,6 +4,7 @@ using System.Collections;
 public class Manager : MonoBehaviour {
 
     public static Manager Instance = null;
+    private bool GameStarted = false;
 
     //Pause menu management
     [SerializeField] Canvas VRPause;
@@ -26,8 +27,6 @@ public class Manager : MonoBehaviour {
     public GameObject[] BulletPool;
     [SerializeField] private GameObject pBullet;
     private int nextAvaliableBullet = 0;//faster than looping through to find next unactive bullet
-
-
 
     //Basic Singleton
     private void Awake ()
@@ -68,33 +67,61 @@ public class Manager : MonoBehaviour {
     public bool IsUpdatable() { return updatable; }
     public void SetUpdatable(bool update) { updatable = update; }
 
+    //Allows outsiders to set/get playgame
+    public bool IsGameStarted() { return GameStarted; }
+    public void StartGame()
+    {
+        GameStarted = true;
+        GetComponentsInChildren<Canvas>()[1].enabled = false;
+    }
+
     //Sets pause state
     public void TogglePause()
     {
+        paused = !paused;
         if(VrPlayer.Instance.GetHealth()>0)//If VR player is alive than pause
         {
-            paused = !paused;
 
             if (paused)//if now paused
             {
-                GetComponentInChildren<Canvas>().enabled = true;
+                GetComponentsInChildren<Canvas>()[0].enabled = true;
                 VRPause.enabled = true;//show VR paused canvas
-                Time.timeScale = 0;//pause time, nessesary??
+                Time.timeScale = 0;//pause time
                 Cursor.lockState = CursorLockMode.None; //give the PC player their mouse back
-                Cursor.visible = true; //hide crosshair
+                Cursor.visible = true;
 
                 updatable = false;
+
+                if(!GameStarted)
+                {
+                    GetComponentsInChildren<Canvas>()[1].enabled = false;
+                }
             }
             else
             {
-                GetComponentInChildren<Canvas>().enabled = false;
+                GetComponentsInChildren<Canvas>()[0].enabled = false;
                 VRPause.enabled = false;//hide VR paused canvas
                 Time.timeScale = 1;//unpause time
                 Cursor.lockState = CursorLockMode.Locked; //lock the PC mouse to center of the screen
-                Cursor.visible = false;//unhide crosshair
+                Cursor.visible = false;
 
                 updatable = true;
+
+                if(!GameStarted)
+                {
+                    GetComponentsInChildren<Canvas>()[1].enabled = true;
+                }
             }
+        }
+        else
+        {
+            GetComponentsInChildren<Canvas>()[2].enabled = true;
+
+            Time.timeScale = 0;
+            Cursor.lockState = CursorLockMode.None; //give the PC player their mouse back
+            Cursor.visible = true; //hide crosshair
+
+            updatable = false;
         }
     }
 
@@ -116,8 +143,14 @@ public class Manager : MonoBehaviour {
             A.SetActive(false);
         }
 
+        //reset the game
         VrPlayer.Instance.Reset();//reset VR player
-        PcPlayer.Instance.transform.position.Set(0, 1, -1.78f);//Reset PC player pos
+        PcPlayer.Instance.transform.position=new Vector3(0, 1, -1.78f);//Reset PC player pos
+        GameStarted = false;
+
+        //turn off death menu
+        GetComponentsInChildren<Canvas>()[2].enabled = false;
+        TogglePause();
     }
     public GameObject GetEnemy()
     {
@@ -142,12 +175,12 @@ public class Manager : MonoBehaviour {
         //Ammo pack is expected to be a low number ~5 so popping a ammo pack could be devistating
         for (int i = 0; i < AmmoNum; ++i)
         {
-            if (!AmmoPackPool[i].activeSelf) //active in hierarchy could be wrong call. use active self instead. Use a current place to speed up check
+            if (!AmmoPackPool[i].activeSelf)//replace with spawning 5 and then only spawning each time one is collected?
             {
                 return AmmoPackPool[i];
             }
         }
-        //Debug.Log("Potentially Not Enough Ammo Packs");
+        //Debug.Log("Consider More Ammo Packs");
         return null;
     }
 

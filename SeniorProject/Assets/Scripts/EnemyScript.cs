@@ -119,6 +119,7 @@ public class EnemyScript : MonoBehaviour
         else if(other.gameObject.tag == "Bullet")//If enemy collides with a bullet, kill self
         {
             Die();
+            VrPlayer.Instance.AddScore(100);
         }
         else if(other.gameObject.tag == "Flare")//If enemy collides with a flare, show hologram
         {
