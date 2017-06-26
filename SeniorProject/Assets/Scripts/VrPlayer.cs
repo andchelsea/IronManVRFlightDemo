@@ -7,22 +7,22 @@ public class VrPlayer : MonoBehaviour {
 
     //Variables
     [SerializeField] public Rigidbody Rb;
-    [SerializeField] public float AngleOffset = 90;//used for flying and shooting
+    [SerializeField] public float AngleOffset = 90; //used for flying and shooting
     private int Score = 0;
 
-    [Space(10)]
     //Flying Variables
+    [Space(10)]
     [SerializeField] public float FlySpeed = 15; 
     [SerializeField] public float MaxSpeed = 150; 
 
-    [Space(10)]
     //Gravity Manipulation
+    [Space(10)]
     [SerializeField] public float lowGrav = 0.5f;
     [SerializeField] public float highGrav= 1.0f;
     private float gravMultiplier= 1.0f;
 
-    [Space(10)]
     //Shooting Variables
+    [Space(10)]
     [SerializeField] public float ProjectileSpeed = 15; 
     [SerializeField] public int Ammo = 10; 
     [SerializeField] private float AttackCoolDown = 0.5f;
@@ -32,9 +32,9 @@ public class VrPlayer : MonoBehaviour {
     [SerializeField] public int Health = 10;
     private int startHealth;
 
-    //Basic Singleton
     void Awake ()
     {
+        //Basic Singleton
         if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
@@ -42,11 +42,13 @@ public class VrPlayer : MonoBehaviour {
         }
         Instance = this;
 
+        //Set Variables
         gravMultiplier = highGrav;
         startHealth = Health;
         startAmmo = Ammo;
     }
 
+    //Update score
     public void AddScore(int points)
     {
         Score += points;
@@ -81,14 +83,16 @@ public class VrPlayer : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.collider.tag == "Land")//Make it harder to take off
+        //Make it harder to take off, reduces motion sickness
+        if (other.collider.tag == "Land")
         {
             gravMultiplier = highGrav;
         }
     }
     void OnCollisionExit(Collision other)
     {
-        if (other.collider.tag == "Land")//Make it easier to fly
+        //Make it easier to fly, reduces motion sickness
+        if (other.collider.tag == "Land")
         {
             gravMultiplier = lowGrav;
         }
@@ -99,7 +103,8 @@ public class VrPlayer : MonoBehaviour {
     {
         if (Manager.Instance.IsUpdatable())
         {
-            Rb.AddForce(Physics.gravity*gravMultiplier, ForceMode.Force);//Apply gravity
+            //Apply gravity
+            Rb.AddForce(Physics.gravity*gravMultiplier, ForceMode.Force);
         }
     }
 }

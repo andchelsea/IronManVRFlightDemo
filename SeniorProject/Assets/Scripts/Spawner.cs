@@ -7,12 +7,12 @@ public class Spawner : MonoBehaviour {
 
     //How often the ammo packs spawn
     [SerializeField] private float AmmoSpawnCoolDown = 0.5f;
-    private float AmmoDelay = 0;
+    private IEnumerator AmmoSpawning = null;//controlls spawning ammo
 
     //How often the enemies spawn
     [SerializeField] private float EnemySpawnCoolDown = 0.5f;
-    private float EnemyDelay = 0.0f;
     [SerializeField] private float EnemyFlySpeed = 5.0f; //arbitrary starting numbers, playtest
+    private IEnumerator EnemySpawning = null;//controls spawning enemies
 
     //spawn area parameters
     [SerializeField] private float minPos = 10.0f;//min distance from VR player
@@ -31,6 +31,9 @@ public class Spawner : MonoBehaviour {
 
         PlayArea = GameObject.FindGameObjectWithTag("PlayArea").GetComponent<BoxCollider>();
         VRPlayer = VrPlayer.Instance.gameObject.transform;
+
+        EnemySpawning = SpawnEnemies();
+        AmmoSpawning = SpawnAmmo();
     }
 
     //Find a suitable spawnable position for ammo or enemy
@@ -52,37 +55,42 @@ public class Spawner : MonoBehaviour {
         return pos;
     }
 
-	void Update ()
+    //replaces update
+    IEnumerator SpawnEnemies()
     {
-        if(Manager.Instance.IsUpdatable() && Manager.Instance.IsGameStarted())//Only update if VR player is alive, game is not paused, and the PC player has started the game
+        GameObject enemy = Manager.Instance.GetEnemy();//find and spawn an enemy
+
+        enemy.GetComponent<EnemyScript>().Reset();
+        enemy.transform.position = SpawnablePos();
+        enemy.GetComponent<Rigidbody>().velocity = enemy.transform.forward * EnemyFlySpeed;//kept in spawner to make the fly speed centeralized
+        yield return new WaitForSeconds(EnemySpawnCoolDown);
+    }
+
+    //replaces update
+    IEnumerator SpawnAmmo()
+    {
+        GameObject ammo = Manager.Instance.GetAmmoPack();
+        if (ammo != null)//Can return null
         {
-            EnemyDelay += Time.deltaTime;//how often to spawn a enemy
-            AmmoDelay += Time.deltaTime;//how often to spawn ammo, !!!!!!repalce with coroutines!!!!!!!!!!!
+            ammo.transform.position = SpawnablePos();
+            ammo.SetActive(true);
+        }
 
-            if (EnemyDelay > EnemySpawnCoolDown)
-            {
-                GameObject e = Manager.Instance.GetEnemy();//find and spawn an enemy
+        yield return new WaitForSeconds(AmmoSpawnCoolDown);
+    }
 
-                EnemyDelay = 0;
-                e.GetComponent<EnemyScript>().Reset();
-                e.transform.position = SpawnablePos();
-                e.GetComponent<Rigidbody>().velocity = e.transform.forward * EnemyFlySpeed;//kept in spawner to make the fly speed centeralized
-            }
-
-            //make an int that keeps track of how many ammo packs are active to avoid a unnessesary for loop
-            if (AmmoDelay > AmmoSpawnCoolDown)
-            {
-                GameObject e = Manager.Instance.GetAmmoPack();
-                if (e != null)//Can return null
-                {
-                    AmmoDelay = 0;
-
-                    e.transform.position = SpawnablePos();
-                    e.SetActive(true);
-                }
-                else
-                    Debug.Log("NOT ENOUGH AMMO PACKS");
-            }
+    //replaces update
+    public void SetSpawn(bool spawn)
+    {
+        if(spawn)
+        {
+            StartCoroutine(AmmoSpawning);
+            StartCoroutine(EnemySpawning);
+        }
+        else
+        {
+            StopCoroutine(EnemySpawning);
+            StopCoroutine(AmmoSpawning);
         }
     }
 }
