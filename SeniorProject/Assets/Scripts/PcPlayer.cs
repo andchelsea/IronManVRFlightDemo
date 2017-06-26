@@ -17,22 +17,24 @@ public class PcPlayer : MonoBehaviour
     [SerializeField] private float MinPitchAngle = -120.0f;
 
     //Flare Variables
+    [Space(10)]
     [SerializeField] private float MaxRayDist = 120.0f;//How far the ray should check (for flare creation)
-    [SerializeField] private GameObject pFlare1;//make a prefab
-    [SerializeField] private GameObject pFlare2;//make a prefab
+    [SerializeField] private GameObject pFlare1;
+    [SerializeField] private GameObject pFlare2;
     [SerializeField] private float FlareCoolDown = 1.0f;
     private float Flare1Delay = 0.0f;
     private float Flare2Delay = 0.0f;
 
-    //Basic Singleton
     private void Start ()
     {
+        //Basic Singleton
         if (Instance != null && Instance != this)
             Destroy(this.gameObject);
         Instance = this;
 
+        //Set Variables
         Rb = GetComponent<Rigidbody>();
-        Cursor.lockState = CursorLockMode.Locked; //aiming crosshairs
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         //Create Flare 1 & 2, Design Idea: have flare 3 & 4 as well
@@ -45,7 +47,8 @@ public class PcPlayer : MonoBehaviour
 	
 	void Update ()
     {
-        if(Manager.Instance.IsUpdatable())//Only update if VR player is alive or game is not paused
+        //Only update if VR player is alive or game is not paused
+        if(Manager.Instance.IsUpdatable())
         {
             //Flare Lifetime
             Flare1Delay += Time.deltaTime;
@@ -68,29 +71,17 @@ public class PcPlayer : MonoBehaviour
             Pitch = Pitch >= MaxPitchAngle ? MaxPitchAngle : Pitch;
             transform.localEulerAngles = new Vector3(Pitch, Yaw, 0.0f);
 
-            //Shoot out raycast for flares
-            RaycastHit info = new RaycastHit();
-            //Debug.Log(info.collider.tag.ToString());
-
-            if(Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out info, MaxRayDist))//cast form the middle of the screen
+            if (Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)
             {
-                    if(info.collider.tag == "Enemy" || info.collider.tag == "Ammo")//if ray returns a valid target
-                    {
-                       if(Input.GetButtonDown("Flare1") && Flare1Delay > FlareCoolDown)//!!!!!!!refactor so that raycast only happens when the flare button is pressed!!!!!!!!
-                        {
-                            pFlare1.transform.position = info.point;
-                            pFlare1.GetComponent<FlareScript>().Reset();//either make a flare script to auto deactivate over time or remove
-                            Flare1Delay = 0.0f;
-                        }
-                       else if(Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
-                        {
-                            pFlare2.transform.position = info.point;
-                            pFlare2.GetComponent<FlareScript>().Reset();
-                            Flare2Delay = 0.0f;
-                        }
-                    }
+                Castflare(pFlare1);
+                Flare1Delay = 0.0f;
             }
-      }
+            else if(Input.GetButtonDown("Flare2") && Flare2Delay > FlareCoolDown)
+            {
+                Castflare(pFlare2);
+                Flare2Delay = 0.0f;
+            }
+      }//end of updatable check
     
         //Allows PC Player to pause game
         if( Input.GetButtonDown("Submit"))
@@ -100,7 +91,27 @@ public class PcPlayer : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
-            Manager.Instance.StartGame();
+            //Manager.Instance.StartGame();
+            Spawner.Instance.SetSpawn(true);
         }
     }
-}
+
+    void Castflare(GameObject flare)
+    {
+        //Shoot out raycast for flares
+        RaycastHit info = new RaycastHit();
+
+        //cast form the middle of the screen
+        if (Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out info, MaxRayDist))
+        {
+            //if ray returns a valid target
+            if (info.collider.tag == "Enemy" || info.collider.tag == "Ammo")
+            {
+                flare.transform.position = info.point;
+                flare.GetComponent<FlareScript>().Reset();
+            }
+
+            //Debug.Log(info.collider.tag.ToString());//For testing
+        }
+    }
+}//end of PC Class

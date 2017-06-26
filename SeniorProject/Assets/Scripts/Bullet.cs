@@ -3,10 +3,9 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour
 {
-    //How long should a bullet be alive for before it despawns?
-    [SerializeField] private float Life = 0;
-    //Keeps track of how long the bullet has been alive for?
-    private float Lifetime = 3;
+    //Variables
+    [SerializeField] private float Life = 0;//How long should a bullet be alive for before it despawns?
+    private float Lifetime = 3;//Keeps track of how long the bullet has been alive for?
 
     void Start ()
     {
@@ -23,10 +22,13 @@ public class Bullet : MonoBehaviour
 
 	void Update ()
     {
-        if(Manager.Instance.IsUpdatable()) //Only update if VR player is alive or game is not paused
+        //Only update if VR player is alive or game is not paused
+        if(Manager.Instance.IsUpdatable()) 
         {
              Lifetime -= Time.deltaTime;
-             if (Lifetime < 0.0f) //check if the bullet is too old
+
+             //check if the bullet is too old
+             if (Lifetime < 0.0f) 
             {
                 this.gameObject.SetActive(false);
             }

@@ -14,9 +14,9 @@ public class AmmoManager : MonoBehaviour
         Ammo.text = VrPlayer.Instance.Ammo.ToString();
     }
 
-    //Basic Singleton
     void Awake()
     {
+        //Basic Singleton
         if (Instance != null && Instance != this)
             Destroy(this.gameObject);
         Instance = this;

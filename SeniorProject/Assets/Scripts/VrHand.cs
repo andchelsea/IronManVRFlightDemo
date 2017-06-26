@@ -5,7 +5,7 @@ public class VrHand : MonoBehaviour
 {
     //Hand Variables
     private SteamVR_TrackedController Controller;//used for controller update
-    private float AngleOffset;
+    private float AngleOffset;//offset bullets and flight by this angle
     private Rigidbody Rb;
 
     //Flying Variables
@@ -22,8 +22,12 @@ public class VrHand : MonoBehaviour
     {
         //Controller set up
         Controller = GetComponent<SteamVR_TrackedController>();
-        Controller.PadClicked += Attack;//Call attack when clicked
-        Controller.MenuButtonClicked += Pause; //Call pause menu when clicked
+
+        //Call attack when clicked
+        Controller.PadClicked += Attack;
+        
+        //Call pause menu when clicked
+        Controller.MenuButtonClicked += Pause; 
 
         //Find components
         ProjectileSpeed = VrPlayer.Instance.ProjectileSpeed;
@@ -37,14 +41,16 @@ public class VrHand : MonoBehaviour
     
     void Attack(object sender, ClickedEventArgs e)
     {
-        if (VrPlayer.Instance.Shootable(AttackDelay))//Can a bullet be fired?
+        //if a bullet can be fired, shoot
+        if (VrPlayer.Instance.Shootable(AttackDelay))
         {
             AttackDelay = 0;
-            GameObject g = Manager.Instance.GetBullet(); //small possiblility to get overrite a bullet currently in use
+            //small possiblility to get overrite a bullet currently in use
+            GameObject g = Manager.Instance.GetBullet(); 
  
             g.GetComponent<Bullet>().Reset();
             g.transform.position = this.transform.position; // might replace this. with an empty object infront of controller or add an offset
-            g.transform.rotation = this.transform.rotation;//   new Quaternion(this.transform.rotation.x, this.transform.rotation.y, this.transform.rotation.z, this.transform.rotation.w);
+            g.transform.rotation = this.transform.rotation;
 
             //add offset from rotation to launch bullet out to the palm iron man style
             Vector3 dir = Quaternion.AngleAxis(AngleOffset, this.transform.forward) * transform.right;
@@ -66,11 +72,13 @@ public class VrHand : MonoBehaviour
 
         if (Rb.velocity.magnitude < MaxSpeed)//negleting to have a max speed can make the player fly though the bounding box
         {
-            Vector3 dir = Quaternion.AngleAxis(AngleOffset, Controller.transform.forward) * transform.right;//Fly out of the palm
-            //needs drag force
+            //Fly out of the palm, needs drag force
+            Vector3 dir = Quaternion.AngleAxis(AngleOffset, Controller.transform.forward) * transform.right;
+
             Rb.AddForce(-dir * FlySpeed);// * triggerpress);
         }
 
+        //give player feedback
         SteamVR_Controller.Input((int)Controller.controllerIndex).TriggerHapticPulse();
         PS.Emit(1);
     }
@@ -79,7 +87,9 @@ public class VrHand : MonoBehaviour
     {
         if(Manager.Instance.IsUpdatable())
         {
-            AttackDelay += Time.deltaTime;//Time passed between shooting
+            //Time passed between shooting
+            AttackDelay += Time.deltaTime;
+
             if (Controller.triggerPressed)
             {
                 Fly();

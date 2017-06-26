@@ -15,9 +15,9 @@ public class EnemyScript : MonoBehaviour
     private ParticleSystem ChildPS;//plays an explosion on VR layer
     private Renderer cRender;
 
-    //Unused, trying to get the enemy to highlight when the PC player mouses over it
-    [SerializeField] private Shader unlit;//make a shader
-    [SerializeField] private Shader lit;//make a shader
+    //Unused, TODO get the enemy to highlight when the PC player mouses over it
+    //[SerializeField] private Shader unlit;//make a shader
+    //[SerializeField] private Shader lit;//make a shader
 
     //Enemy Variables
     private Transform PlayerPos;
@@ -30,20 +30,23 @@ public class EnemyScript : MonoBehaviour
     //Set Variables
     void Awake ()
     {
-       //GetComponent<Material>().shader = unlit;
-        Lifetime = life;
-        PlayerPos = VrPlayer.Instance.gameObject.transform;
+        //Not the best, since it's enemy structure dependent
+        child = this.gameObject.transform.GetChild(0).gameObject;
+        ChildPS = child.GetComponent<ParticleSystem>();
+
+        //Get Components
+        PS = GetComponent<ParticleSystem>();
+        pRender = this.gameObject.GetComponent<Renderer>();
+        sCollider = this.gameObject.GetComponent<SphereCollider>();
         rb = GetComponent<Rigidbody>();
         DeathSound = GetComponent<AudioSource>();
 
-        child = this.gameObject.transform.GetChild(0).gameObject;//Not the best, since it's enemy structure dependent
-        PS = GetComponent<ParticleSystem>();
-        ChildPS = child.GetComponent<ParticleSystem>();
-
-        pRender = this.gameObject.GetComponent<Renderer>();
         cRender = child.gameObject.GetComponent<Renderer>();
         cRender.enabled= false;
-        sCollider = this.gameObject.GetComponent<SphereCollider>();
+
+        //Set variables
+        Lifetime = life;
+        PlayerPos = VrPlayer.Instance.gameObject.transform;
     }
 
     //Called everytime a enemy is spawned
@@ -58,7 +61,7 @@ public class EnemyScript : MonoBehaviour
         sCollider.enabled = true;
     }
 
-    //Called to turn off an enemy (where explode is whether to play an explosion)
+    //Called to turn off an enemy 
     public void Die(bool explode = true)
     {
         cRender.enabled = false;
@@ -66,7 +69,8 @@ public class EnemyScript : MonoBehaviour
         sCollider.enabled = false;
         rb.velocity = Vector3.zero;
 
-        if(explode)
+        //if explode is required
+        if (explode)
         {
             PS.Play();
             ChildPS.Play();
@@ -76,19 +80,24 @@ public class EnemyScript : MonoBehaviour
 
 	void FixedUpdate()
     {
-        if (Manager.Instance.IsUpdatable())//Only update if VR player is alive or game is not paused
+        //Only update if VR player is alive or game is not paused
+        if (Manager.Instance.IsUpdatable())
         { 
-            if(child.activeSelf)//If the enemy has been hit by a flare
+             //If the enemy has been hit by a flare
+            if(child.activeSelf)
             {
+                //If hologram expires turn it off
                 ChildLife -= Time.deltaTime;
-                if (ChildLife < 0.0f)//If hologram expires turn it off
+
+                if (ChildLife < 0.0f)
                 {
                   cRender.enabled=false;
                 }
             }
-
+            //if enemy expires silently turn it off
             Lifetime -= Time.deltaTime;
-            if (Lifetime < 0.0f)//if enemy expires silently turn it off
+
+            if (Lifetime < 0.0f)
             {
                 Die(false);
             }
@@ -99,15 +108,10 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    //Unused, for PC player to highlight Enemy on mouse over 
-    void OnMouseExit()
-    {
-        //GetComponent<Material>().shader = unlit;
-    }
-
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")//If enemy collides with player, hurt player
+        //If enemy collides with player, hurt player
+        if (other.gameObject.tag == "Player")
         {
             Die();
             HealthManager.Instance.Damaged();
@@ -116,12 +120,14 @@ public class EnemyScript : MonoBehaviour
                 Manager.Instance.SetUpdatable(false);
             }
         }
-        else if(other.gameObject.tag == "Bullet")//If enemy collides with a bullet, kill self
+        //If enemy collides with a bullet, kill self
+        else if(other.gameObject.tag == "Bullet")
         {
             Die();
             VrPlayer.Instance.AddScore(100);
         }
-        else if(other.gameObject.tag == "Flare")//If enemy collides with a flare, show hologram
+        //If enemy collides with a flare, show hologram
+        else if(other.gameObject.tag == "Flare")
         {
             cRender.enabled=true;
             ChildLife = hologramLife;

@@ -13,9 +13,9 @@ public class ScoreManager : MonoBehaviour {
         score.text = "Score: " + VrPlayer.Instance.GetScore().ToString();
     }
 
-    //Basic Singleton
     void Awake()
     {
+        //Basic Singleton
         if (Instance != null && Instance != this)
             Destroy(this.gameObject);
         Instance = this;

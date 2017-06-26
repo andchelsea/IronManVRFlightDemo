@@ -16,13 +16,18 @@ public class FlareScript : MonoBehaviour
     }
 	
 	void Update () {
-        if (Manager.Instance.IsUpdatable())//Only update if VR player is alive or game is not paused
+        //Only update if VR player is alive or game is not paused
+        if (Manager.Instance.IsUpdatable())
         {
             timer += Time.deltaTime;
-            if (timer > FlareDeactivate)//if flare is old, kill it
+
+            //if flare is old, kill it
+            if (timer > FlareDeactivate)
             {
                 this.gameObject.SetActive(false);
-                this.GetComponent<ParticleSystem>().Stop();//if .Stop() is not called, will cause issues with .Play()
+
+                //if .Stop() is not called, will cause issues with .Play()
+                this.GetComponent<ParticleSystem>().Stop();
             }
         }
 	}

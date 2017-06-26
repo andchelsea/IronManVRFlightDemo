@@ -7,25 +7,25 @@ public class Manager : MonoBehaviour {
     private bool GameStarted = false;
 
     //Pause menu management
-    [SerializeField] Canvas VRPause;
+    [SerializeField] Canvas VRPause = null;
     private bool paused = false;
     private bool updatable = true;
 
     //Ammo spawned from a prespawned pool
     [SerializeField] int AmmoNum = 10;
     public GameObject[] AmmoPackPool;
-    [SerializeField] private GameObject pAmmo;
+    [SerializeField] private GameObject pAmmo=null;
 
     //Enemies spawned from a prespawned pool
     [SerializeField] int EnemyNum = 50;
     public GameObject[] EnemyPool;
-    [SerializeField] private GameObject pEnemy;
+    [SerializeField] private GameObject pEnemy=null;
     private int nextAvaliableEnemy = 0;//faster than looping through to find next unactive enemy
 
     //Bullets spawned from a prespawned pool
     [SerializeField] int BulletNum = 20;
     public GameObject[] BulletPool;
-    [SerializeField] private GameObject pBullet;
+    [SerializeField] private GameObject pBullet=null;
     private int nextAvaliableBullet = 0;//faster than looping through to find next unactive bullet
 
     //Basic Singleton
@@ -79,47 +79,48 @@ public class Manager : MonoBehaviour {
     public void TogglePause()
     {
         paused = !paused;
-        if(VrPlayer.Instance.GetHealth()>0)//If VR player is alive than pause
+
+        //If VR player is alive than pause
+        if(VrPlayer.Instance.GetHealth()>0)
         {
+            //show pause menu if paused
+            GetComponentsInChildren<Canvas>()[0].enabled = paused;
 
-            if (paused)//if now paused
+            //show VR paused canvas if paused
+            VRPause.enabled = paused;
+
+            //set timescale to 0 if paused
+            Time.timeScale = paused? 0 : 1;
+
+            //center the mouse during gameplay
+            Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
+
+            //if paused dont update
+            updatable = !paused;
+
+
+            if (!GameStarted)
             {
-                GetComponentsInChildren<Canvas>()[0].enabled = true;
-                VRPause.enabled = true;//show VR paused canvas
-                Time.timeScale = 0;//pause time
-                Cursor.lockState = CursorLockMode.None; //give the PC player their mouse back
-                Cursor.visible = true;
-
-                updatable = false;
-
-                if(!GameStarted)
-                {
-                    GetComponentsInChildren<Canvas>()[1].enabled = false;
-                }
+                //if game hasn't started and is paused hide game instructions on PC side
+                GetComponentsInChildren<Canvas>()[1].enabled = !paused;
             }
             else
             {
-                GetComponentsInChildren<Canvas>()[0].enabled = false;
-                VRPause.enabled = false;//hide VR paused canvas
-                Time.timeScale = 1;//unpause time
-                Cursor.lockState = CursorLockMode.Locked; //lock the PC mouse to center of the screen
-                Cursor.visible = false;
-
-                updatable = true;
-
-                if(!GameStarted)
-                {
-                    GetComponentsInChildren<Canvas>()[1].enabled = true;
-                }
+                //if game paused dont spawn
+                Spawner.Instance.SetSpawn(!paused);
             }
         }
+        //for death state
         else
         {
+            //activate death screeen on PC side
             GetComponentsInChildren<Canvas>()[2].enabled = true;
 
             Time.timeScale = 0;
-            Cursor.lockState = CursorLockMode.None; //give the PC player their mouse back
-            Cursor.visible = true; //hide crosshair
+
+            //give the PC player their mouse back
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
 
             updatable = false;
         }
@@ -144,8 +145,8 @@ public class Manager : MonoBehaviour {
         }
 
         //reset the game
-        VrPlayer.Instance.Reset();//reset VR player
-        PcPlayer.Instance.transform.position=new Vector3(0, 1, -1.78f);//Reset PC player pos
+        VrPlayer.Instance.Reset();
+        PcPlayer.Instance.transform.position = new Vector3(0, 1, -1.78f);
         GameStarted = false;
 
         //turn off death menu
@@ -175,7 +176,8 @@ public class Manager : MonoBehaviour {
         //Ammo pack is expected to be a low number ~5 so popping a ammo pack could be devistating
         for (int i = 0; i < AmmoNum; ++i)
         {
-            if (!AmmoPackPool[i].activeSelf)//replace with spawning 5 and then only spawning each time one is collected?
+            //replace with spawning 5 and then only spawning each time one is collected?
+            if (!AmmoPackPool[i].activeSelf)
             {
                 return AmmoPackPool[i];
             }
