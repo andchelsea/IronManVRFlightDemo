@@ -10,6 +10,7 @@ public class AmmoManager : MonoBehaviour
     void Start()
     {
         Ammo = GetComponent<Text>();
+        Ammo.text = VrPlayer.Instance.Ammo.ToString();
     }
     void Awake()
     {

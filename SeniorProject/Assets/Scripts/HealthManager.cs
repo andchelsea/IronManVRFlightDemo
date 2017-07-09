@@ -10,6 +10,7 @@ public class HealthManager : MonoBehaviour {
     void Start ()
     {
         health = GetComponent<Text>();
+        health.text = VrPlayer.Instance.GetHealth().ToString();
        
 	}
     void Awake()
