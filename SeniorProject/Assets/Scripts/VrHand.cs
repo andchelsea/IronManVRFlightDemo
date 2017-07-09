@@ -7,6 +7,7 @@ public class VrHand : MonoBehaviour
     private float ProjectileSpeed;
     private float FlySpeed;
     private float MaxSpeed;
+    private float AngleOffset;
     private Rigidbody Rb;
     private float AttackDelay;
      AudioSource fireSound;
@@ -26,6 +27,7 @@ public class VrHand : MonoBehaviour
         Rb = VrPlayer.Instance.Rb;
         fireSound = GetComponent<AudioSource>();
         PS = GetComponent<ParticleSystem>();
+        AngleOffset = VrPlayer.Instance.AngleOffset;
     }
     
     void Attack(object sender, ClickedEventArgs e)
@@ -39,12 +41,13 @@ public class VrHand : MonoBehaviour
                 g.GetComponent<Bullet>().Reset();
                 g.transform.position = this.transform.position; //this might wanna make an empty object infront of controller or with an offset
 
-                //Gives bullets funky rotations, FIX???
                 //g.transform.rotation = new Quaternion(this.transform.rotation.x, this.transform.rotation.y, this.transform.rotation.z, this.transform.rotation.w);
-                //Vector3 v = 
                 g.transform.rotation = this.transform.rotation;//   new Quaternion(this.transform.rotation.x, this.transform.rotation.y, this.transform.rotation.z, this.transform.rotation.w);
 
-                g.GetComponent<Rigidbody>().AddForce(new Vector3(this.transform.forward.x, this.transform.forward.y, this.transform.forward.z) * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!
+                Vector3 dir = Quaternion.AngleAxis(AngleOffset, this.transform.forward) * transform.right;
+                //g.GetComponent<Rigidbody>().AddForce(new Vector3(this.transform.forward.x, this.transform.forward.y, this.transform.forward.z) * ProjectileSpeed, ForceMode.Impulse);//needs to be tested!!!
+                g.GetComponent<Rigidbody>().AddForce(dir * ProjectileSpeed, ForceMode.Impulse);
+
                 fireSound.Play();
             }
             else

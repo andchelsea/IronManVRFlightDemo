@@ -5,12 +5,10 @@ public class EnemyScript : MonoBehaviour
 {
     private float Lifetime = 3;//needed?
     private float ChildLife = 0;
-    [SerializeField]
     private GameObject child;
     [SerializeField] private float hologramLife = 2;
     [SerializeField] private float life = 0;
     [SerializeField] private Shader unlit;//make a shader
-    [SerializeField] private Shader lit;//make a shader
     Transform PlayerPos;
     Rigidbody rb;
     // Use this for initialization
@@ -22,6 +20,7 @@ public class EnemyScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         child = this.gameObject.transform.GetChild(0).gameObject;//enemy structure dependednt
         child.SetActive(false);
+
     }
 
 	public void Reset()
@@ -60,6 +59,7 @@ public class EnemyScript : MonoBehaviour
 
     void OnMouseExit()
     {
+<<<<<<< HEAD
         //GetComponent<Material>().shader = unlit;
     }
 
@@ -67,6 +67,12 @@ public class EnemyScript : MonoBehaviour
     {
         //GetComponent<Material>().shader = lit;//testing required
     }
+=======
+        GetComponent<Material>().shader = unlit;
+        Debug.Log("So so so wrong");
+    }
+
+>>>>>>> 13b8888... 
 
     void OnParticleCollision(GameObject other)
     {
